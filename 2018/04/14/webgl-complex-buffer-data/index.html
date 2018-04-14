@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="webgl graphics," />
 
 
 
@@ -79,19 +79,18 @@
 
 
 
-<meta name="description" content="我，坚信编程改变世界！一行行神奇的字符堆叠而成的代码，构建了繁荣的互联网时代。作为一名程序员，深深为自己能给这个世界添砖加瓦而骄傲！茫茫人海中，我没有华丽的身段，没有盖世的武功，但我坚信，流淌于指尖的字符足以撼动岁月的印记，在你我之间留下珍贵的回忆… 我是谁？一个专注于前端的开发者：游戏、web、WebGL、nodejs 平时做什么？coding、爬山、看书 我在哪儿？曾工作于长沙、上海，目前居于">
+<meta name="description" content="总结一下通过一个缓冲区传递复杂的顶点属性到vertex shader。通常顶点属性数组包含许多顶点属性，如位置，颜色，法向量等，如果每个属性都分散用不同的数组来存储，会浪费许多空间（VBO），而且，增加操作复杂度。那么在一个顶点属性数组中包含多种多种属性，创建一个顶点缓冲区，怎么将不同的属性传递给不同的shader变量呢？ 这个例子中，顶点信息中包含坐标信息和顶点大小：a_Position和a_P">
+<meta name="keywords" content="webgl graphics">
 <meta property="og:type" content="article">
-<meta property="og:title" content="自我介绍">
-<meta property="og:url" content="https://yaozhiguo2016.github.io/2018/04/13/first-blog/index.html">
+<meta property="og:title" content="WebGL用单缓冲区传递复合顶点属性到Shader">
+<meta property="og:url" content="https://yaozhiguo2016.github.io/2018/04/14/webgl-complex-buffer-data/index.html">
 <meta property="og:site_name" content="姚志国的世界">
-<meta property="og:description" content="我，坚信编程改变世界！一行行神奇的字符堆叠而成的代码，构建了繁荣的互联网时代。作为一名程序员，深深为自己能给这个世界添砖加瓦而骄傲！茫茫人海中，我没有华丽的身段，没有盖世的武功，但我坚信，流淌于指尖的字符足以撼动岁月的印记，在你我之间留下珍贵的回忆… 我是谁？一个专注于前端的开发者：游戏、web、WebGL、nodejs 平时做什么？coding、爬山、看书 我在哪儿？曾工作于长沙、上海，目前居于">
+<meta property="og:description" content="总结一下通过一个缓冲区传递复杂的顶点属性到vertex shader。通常顶点属性数组包含许多顶点属性，如位置，颜色，法向量等，如果每个属性都分散用不同的数组来存储，会浪费许多空间（VBO），而且，增加操作复杂度。那么在一个顶点属性数组中包含多种多种属性，创建一个顶点缓冲区，怎么将不同的属性传递给不同的shader变量呢？ 这个例子中，顶点信息中包含坐标信息和顶点大小：a_Position和a_P">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/psb.jpg">
-<meta property="og:updated_time" content="2018-04-13T10:06:32.035Z">
+<meta property="og:updated_time" content="2018-04-14T08:18:40.985Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="自我介绍">
-<meta name="twitter:description" content="我，坚信编程改变世界！一行行神奇的字符堆叠而成的代码，构建了繁荣的互联网时代。作为一名程序员，深深为自己能给这个世界添砖加瓦而骄傲！茫茫人海中，我没有华丽的身段，没有盖世的武功，但我坚信，流淌于指尖的字符足以撼动岁月的印记，在你我之间留下珍贵的回忆… 我是谁？一个专注于前端的开发者：游戏、web、WebGL、nodejs 平时做什么？coding、爬山、看书 我在哪儿？曾工作于长沙、上海，目前居于">
-<meta name="twitter:image" content="https://yaozhiguo2016.github.io/blog-imgs/psb.jpg">
+<meta name="twitter:title" content="WebGL用单缓冲区传递复合顶点属性到Shader">
+<meta name="twitter:description" content="总结一下通过一个缓冲区传递复杂的顶点属性到vertex shader。通常顶点属性数组包含许多顶点属性，如位置，颜色，法向量等，如果每个属性都分散用不同的数组来存储，会浪费许多空间（VBO），而且，增加操作复杂度。那么在一个顶点属性数组中包含多种多种属性，创建一个顶点缓冲区，怎么将不同的属性传递给不同的shader变量呢？ 这个例子中，顶点信息中包含坐标信息和顶点大小：a_Position和a_P">
 
 
 
@@ -121,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://yaozhiguo2016.github.io/2018/04/13/first-blog/"/>
+  <link rel="canonical" href="https://yaozhiguo2016.github.io/2018/04/14/webgl-complex-buffer-data/"/>
 
 
 
 
 
-  <title>自我介绍 | 姚志国的世界</title>
+  <title>WebGL用单缓冲区传递复合顶点属性到Shader | 姚志国的世界</title>
   
 
 
@@ -192,16 +191,6 @@
         </li>
       
         
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
-            
-            Categories
-          </a>
-        </li>
-      
-        
         <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
             
@@ -254,7 +243,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yaozhiguo2016.github.io/2018/04/13/first-blog/">
+    <link itemprop="mainEntityOfPage" href="https://yaozhiguo2016.github.io/2018/04/14/webgl-complex-buffer-data/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="yaozhiguo">
@@ -271,7 +260,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">自我介绍</h1>
+          <h1 class="post-title" itemprop="name headline">WebGL用单缓冲区传递复合顶点属性到Shader</h1>
         
 
         <div class="post-meta">
@@ -283,8 +272,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-13T18:06:32+08:00">
-                2018-04-13
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-14T16:15:58+08:00">
+                2018-04-14
               </time>
             
 
@@ -293,6 +282,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/graphics/" itemprop="url" rel="index">
+                    <span itemprop="name">graphics</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -321,12 +332,46 @@
       
 
       
-        <p>我，坚信编程改变世界！一行行神奇的字符堆叠而成的代码，构建了繁荣的互联网时代。作为一名程序员，深深为自己能给这个世界添砖加瓦而骄傲！茫茫人海中，我没有华丽的身段，没有盖世的武功，但我坚信，流淌于指尖的字符足以撼动岁月的印记，在你我之间留下珍贵的回忆…</p>
-<h2 id="我是谁？"><a href="#我是谁？" class="headerlink" title="我是谁？"></a>我是谁？</h2><p>一个专注于前端的开发者：游戏、web、WebGL、nodejs</p>
-<h2 id="平时做什么？"><a href="#平时做什么？" class="headerlink" title="平时做什么？"></a>平时做什么？</h2><p>coding、爬山、看书</p>
-<h2 id="我在哪儿？"><a href="#我在哪儿？" class="headerlink" title="我在哪儿？"></a>我在哪儿？</h2><p>曾工作于长沙、上海，目前居于杭州—-一个天堂般的城市</p>
-<h2 id="程序员的箴言"><a href="#程序员的箴言" class="headerlink" title="程序员的箴言"></a>程序员的箴言</h2><p>Talk is cheap, Show me the code!!</p>
-<p><img src="/blog-imgs/psb.jpg" alt="hello"></p>
+        <p>总结一下通过一个缓冲区传递复杂的顶点属性到vertex shader。<br>通常顶点属性数组包含许多顶点属性，如位置，颜色，法向量等，如果每个属性都分散用不同的数组来存储，会浪费许多空间（VBO），而且，增加操作复杂度。那么在一个顶点属性数组中包含多种多种属性，创建一个顶点缓冲区，怎么将不同的属性传递给不同的shader变量呢？</p>
+<p>这个例子中，顶点信息中包含坐标信息和顶点大小：a_Position和a_PointSize，存储于一个数组中：<br>顶点着色器代码：</p>
+<pre><code>
+attribute vec4 a_Position;
+attribute float a_PointSize;
+void main() {
+    gl_Position = a_Position;
+    gl_PointSize = a_PointSize;
+}
+</code></pre>
+
+<p>JS代码</p>
+<pre><code>
+var verticesSizes = new Float32Array([
+// Vertex coordinates and size of a point
+    0.0, 0.5, 10.0, // The 1st vertex
+    -0.5, -0.5, 20.0, // The 2nd vertex
+    0.5, -0.5, 30.0 // The 3rd vertex
+]);
+// Create a buffer object
+var vertexSizeBuffer = gl.createBuffer();
+// Write vertex coords and point sizes to the buffer and enable it
+gl.bindBuffer(gl.ARRAY_BUFFER, vertexSizeBuffer);
+gl.bufferData(gl.ARRAY_BUFFER, verticesSizes, gl.STATIC_DRAW);
+
+var FSIZE = verticesSizes.BYTES_PER_ELEMENT;
+// Get the storage location of a_Position, allocate buffer, & enable
+var a_Position = gl.getAttribLocation(gl.program, 'a_Position');
+...
+gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, FSIZE * 3, 0);
+gl.enableVertexAttribArray(a_Position); // Enable allocation
+
+// Get the storage location of a_PointSize, allocate buffer, & enable
+var a_PointSize = gl.getAttribLocation(gl.program, 'a_PointSize');
+...
+gl.vertexAttribPointer(a_PointSize, 1, gl.FLOAT, false, FSIZE * 3, FSIZE * 2);
+gl.enableVertexAttribArray(a_PointSize); // Enable buffer allocation
+</code></pre>
+
+<p>代码中，顶点数组只有一个，包含了顶点坐标和大小，创建了一个缓冲区对象vertexSizeBuffer，然后绑定到gl.ARRAY_BUFFER同时赋值，这个过程只有一次。然后通过两次gl.vertexAttribPointer和gl.enableVertexAttribArray操作，为shader传递对应的属性值。</p>
 
       
     </div>
@@ -342,6 +387,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/webgl-graphics/" rel="tag"># webgl graphics</a>
+          
+        </div>
+      
 
       
       
@@ -351,15 +402,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/04/14/webgl/" rel="next" title="WebGL2D纹理映射">
+                <i class="fa fa-chevron-left"></i> WebGL2D纹理映射
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/04/14/git-command-line/" rel="prev" title="Git命令概要">
-                Git命令概要 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -411,17 +462,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -436,14 +478,32 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
             
 
             
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
 
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
             
 
           </nav>
@@ -464,22 +524,6 @@
       </section>
 
       
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#我是谁？"><span class="nav-number">1.</span> <span class="nav-text">我是谁？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#平时做什么？"><span class="nav-number">2.</span> <span class="nav-text">平时做什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#我在哪儿？"><span class="nav-number">3.</span> <span class="nav-text">我在哪儿？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#程序员的箴言"><span class="nav-number">4.</span> <span class="nav-text">程序员的箴言</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
 
       
 
@@ -499,6 +543,15 @@
   </span>
   <span class="author" itemprop="copyrightHolder">yaozhiguo</span>
 
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count"></span>
   
 </div>
 
