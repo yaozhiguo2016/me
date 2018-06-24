@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="webgl, graphics," />
+  <meta name="keywords" content="normal transform," />
 
 
 
@@ -79,21 +79,20 @@
 
 
 
-<meta name="description" content="总结一下WebGL中，2d纹理映射。本文只包含单纹理映射。加载shader文件，初始化WebGL上下文，加载需要映射到WebGL的图片：  private gl:WebGLRenderingContext; private shaderLoader:ShaderLoader;  public constructor() {     this.shaderLoader = new ShaderLoa">
-<meta name="keywords" content="webgl, graphics">
+<meta name="description" content="顶点和法线的区别  在齐次坐标系中，一个顶点的表达式为(x, y, z, 1);而一个法线的表达式为（x, y, z, 0)。法线向量的最后一个元素w=0，表示该点位于无穷远处，即只具备方向的唯一性，而不具备位置特性。而顶点位置向量的w=1，这是一个3D的点在齐次坐标系中默认的投影面。顶点位置向量同时具备方向和位置特性。 3✖️3矩阵表达的都是线性变换，无法表达平移变换。为了可以支持矩阵对平移的">
+<meta name="keywords" content="normal transform">
 <meta property="og:type" content="article">
-<meta property="og:title" content="WebGL2D纹理映射">
-<meta property="og:url" content="https://yaozhiguo2016.github.io/2018/04/14/webgl/index.html">
+<meta property="og:title" content="3D中的法线变换">
+<meta property="og:url" content="https://yaozhiguo2016.github.io/2018/06/23/3d-normal-transform/index.html">
 <meta property="og:site_name" content="姚志国的世界">
-<meta property="og:description" content="总结一下WebGL中，2d纹理映射。本文只包含单纹理映射。加载shader文件，初始化WebGL上下文，加载需要映射到WebGL的图片：  private gl:WebGLRenderingContext; private shaderLoader:ShaderLoader;  public constructor() {     this.shaderLoader = new ShaderLoa">
+<meta property="og:description" content="顶点和法线的区别  在齐次坐标系中，一个顶点的表达式为(x, y, z, 1);而一个法线的表达式为（x, y, z, 0)。法线向量的最后一个元素w=0，表示该点位于无穷远处，即只具备方向的唯一性，而不具备位置特性。而顶点位置向量的w=1，这是一个3D的点在齐次坐标系中默认的投影面。顶点位置向量同时具备方向和位置特性。 3✖️3矩阵表达的都是线性变换，无法表达平移变换。为了可以支持矩阵对平移的">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/2cood.png">
-<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/draw-img.png">
-<meta property="og:updated_time" content="2018-04-14T08:09:21.772Z">
+<meta property="og:image" content="http://my.csdn.net/uploads/201207/19/1342681659_1427.jpg">
+<meta property="og:updated_time" content="2018-06-23T02:18:02.113Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="WebGL2D纹理映射">
-<meta name="twitter:description" content="总结一下WebGL中，2d纹理映射。本文只包含单纹理映射。加载shader文件，初始化WebGL上下文，加载需要映射到WebGL的图片：  private gl:WebGLRenderingContext; private shaderLoader:ShaderLoader;  public constructor() {     this.shaderLoader = new ShaderLoa">
-<meta name="twitter:image" content="https://yaozhiguo2016.github.io/blog-imgs/2cood.png">
+<meta name="twitter:title" content="3D中的法线变换">
+<meta name="twitter:description" content="顶点和法线的区别  在齐次坐标系中，一个顶点的表达式为(x, y, z, 1);而一个法线的表达式为（x, y, z, 0)。法线向量的最后一个元素w=0，表示该点位于无穷远处，即只具备方向的唯一性，而不具备位置特性。而顶点位置向量的w=1，这是一个3D的点在齐次坐标系中默认的投影面。顶点位置向量同时具备方向和位置特性。 3✖️3矩阵表达的都是线性变换，无法表达平移变换。为了可以支持矩阵对平移的">
+<meta name="twitter:image" content="http://my.csdn.net/uploads/201207/19/1342681659_1427.jpg">
 
 
 
@@ -123,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="https://yaozhiguo2016.github.io/2018/04/14/webgl/"/>
+  <link rel="canonical" href="https://yaozhiguo2016.github.io/2018/06/23/3d-normal-transform/"/>
 
 
 
 
 
-  <title>WebGL2D纹理映射 | 姚志国的世界</title>
+  <title>3D中的法线变换 | 姚志国的世界</title>
   
 
 
@@ -256,7 +255,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yaozhiguo2016.github.io/2018/04/14/webgl/">
+    <link itemprop="mainEntityOfPage" href="https://yaozhiguo2016.github.io/2018/06/23/3d-normal-transform/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="yaozhiguo">
@@ -273,7 +272,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">WebGL2D纹理映射</h1>
+          <h1 class="post-title" itemprop="name headline">3D中的法线变换</h1>
         
 
         <div class="post-meta">
@@ -285,8 +284,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-14T16:09:21+08:00">
-                2018-04-14
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-23T10:15:48+08:00">
+                2018-06-23
               </time>
             
 
@@ -345,130 +344,24 @@
       
 
       
-        <p>总结一下WebGL中，2d纹理映射。本文只包含单纹理映射。<br>加载shader文件，初始化WebGL上下文，加载需要映射到WebGL的图片：</p>
-<pre><code>
-private gl:WebGLRenderingContext;
-private shaderLoader:ShaderLoader;
-
-public constructor()
-{
-    this.shaderLoader = new ShaderLoader();
-    this.shaderLoader.load('shaders/simple_texture/vertex.glsl',
-            'shaders/simple_texture/fragment.glsl');
-    this.shaderLoader.addEventListener('ShaderComplete', this.onShaderComplete, this);
-}
-
-private onShaderComplete(event:Event):void
-{
-    this.gl = RenderContext.createConext();
-    let shader:ShaderResult = event.data;
-    initShaders(this.gl, shader.vert, shader.frag);
-    this.loadImage();
-}
-
-private loadImage():void
-{
-    let image:HTMLImageElement = new Image(); // Create an image object
-    image.onload = ()=>{
-        this.initTexture(image);
-        this.initVertexBuffers();
-        this.draw();
-    };
-    image.src = 'resource/sky.JPG';
-}
-</code></pre>
-
-<p>对应的shaders,分别是顶点shader和片元shader：</p>
-<pre><code>
-attribute vec4 a_Position;
-attribute vec2 a_TexCood;
-varying vec2 v_TexCood;
-
-void main() {
-    gl_Position = a_Position;
-    v_TexCood = a_TexCood;
-}
-</code></pre>
-
-<pre><code>
-precision mediump float;
-
-uniform sampler2D u_sampler2d;
-varying vec2 v_TexCood;
-
-void main() {
-    gl_FragColor = texture2D(u_sampler2d, v_TexCood);
-}
-</code></pre>
-
-<p>初始化顶点信息：</p>
-<pre><code>
-private initVertexBuffers():void
-{
-    let vertTexs:Float32Array = new Float32Array([
-        -0.5, 0.5,  0.0, 1.0,
-        -0.5, -0.5, 0.0, 0.0,
-        0.5, 0.5,  1.0, 1.0,
-        0.5, -0.5, 1.0, 0.0
-    ]);
-    let gl:WebGLRenderingContext = this.gl;
-    let vertTexBuffer:WebGLBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, vertTexBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, vertTexs, gl.STATIC_DRAW);
-
-    let FLOAT32_SIZE:number = vertTexs.BYTES_PER_ELEMENT;
-
-    let a_Position:number = gl.getAttribLocation(gl['program'], 'a_Position');
-    gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, FLOAT32_SIZE * 4, 0);
-    gl.enableVertexAttribArray(a_Position);
-
-    let a_TexCood:number = gl.getAttribLocation(gl['program'], 'a_TexCood');
-    gl.vertexAttribPointer(a_TexCood, 2, gl.FLOAT, false, FLOAT32_SIZE * 4, FLOAT32_SIZE * 2);
-    gl.enableVertexAttribArray(a_TexCood);
-}
-</code></pre>
-
-<p>顶点数据的数组每一行中(如-0.5, 0.5, 0.0, 1.0)，包含了顶点坐标和纹理坐标(各占两个元素)，纹理坐标的范围是0-1.<br>通过a_Position和a_TexCood参数分别把这两种坐标数据传入顶点shader中。顶点shader在经历图元装配和光栅化过程之后，获得的片元坐标插值保存于v_TexCood中，然后传入片元shader，通过texture2D(u_sampler2d, v_TexCood)的采样操作，获取片元的颜色值，赋值给g_FragColor的内建变量。</p>
-<p>初始化纹理信息：</p>
-<pre><code>
-private initTexture(image:HTMLImageElement):void
-{
-    let gl:WebGLRenderingContext = this.gl;
-    let texture:WebGLTexture = gl.createTexture(); // Create a texture object
-    // Get the storage location of the u_Sampler
-    let u_Sampler:WebGLUniformLocation = gl.getUniformLocation(gl['program'], 'u_sampler2d');
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image's y axis
-    // Enable the texture unit 0
-    gl.activeTexture(gl.TEXTURE0);
-    // Bind the texture object to the target
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-
-    // Set the texture parameters
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    // Set the texture image
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
-
-    // Set the texture unit 0 to the sampler
-    gl.uniform1i(u_Sampler, 0);
-}
-</code></pre>
-
-<p>这个方法集中了对纹理相关的操作。<br>gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image’s y axis<br>这个方法是对DOM的图片元素进行了翻转，因为二者的坐标的Y方向相反，如果不翻转，映射的结果是和原始图片的方向相反。</p>
-<p><img src="/blog-imgs/2cood.png" alt=""></p>
-<p>gl.activeTexture(gl.TEXTURE0);<br>这个方法用于激活纹理单元。WebGL系统支持多重纹理绘制，即在同一个UV纹理坐标上，可以同时叠加颜色。WebGL至少支持8重纹理叠加：gl.TEXTURE0,…glTEXTURE7.不同的浏览器实现有所差别。<br>gl.bindTexture(gl.TEXTURE_2D, texture);<br>这个方法用于绑定纹理目标，和顶点数组类似，纹理目标也对应纹理的类型，纹理类型在WebGL中包含：gl.TEXTURE_2D (2维纹理)和gl.TEXTURE_CUBE_MAP(立方体纹理).<br>gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);<br>这个方法用于设置纹理参数。</p>
-<p>gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);<br>给纹理目标赋予数据对象(图片数据)。</p>
-<p>WebGL绘制：</p>
-<pre><code>
-private draw():void
-{
-    this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    this.gl.clear(this.gl.COLOR_BUFFER_BIT);
-    this.gl.drawArrays(this.gl.TRIANGLE_STRIP, 0, 4);
-}
-</code></pre>
-
-<p>最后的效果图：</p>
-<p><img src="/blog-imgs/draw-img.png" alt=""></p>
+        <ul>
+<li><p>顶点和法线的区别</p>
+<p> 在齐次坐标系中，一个顶点的表达式为(x, y, z, 1);而一个法线的表达式为（x, y, z, 0)。法线向量的最后一个元素w=0，表示该点位于无穷远处，即只具备方向的唯一性，而不具备位置特性。而顶点位置向量的w=1，这是一个3D的点在齐次坐标系中默认的投影面。顶点位置向量同时具备方向和位置特性。<br> 3✖️3矩阵表达的都是线性变换，无法表达平移变换。为了可以支持矩阵对平移的表达，进而完成平移、缩放和旋转等变换的联合操作(矩阵相乘)，通常都用4✖️4矩阵来表达各种变换。对于平移变换，顶点位置和顶点法线向量分别通过4✖️4矩阵变换，可以得到正常的结果。<br>  顶点位置在经过某些矩阵变换之后，对应的顶点法线该如何变换呢？先看一张图：<br>  <img src="http://my.csdn.net/uploads/201207/19/1342681659_1427.jpg" alt="法线变换图"><br>上图是对一个多边形以及一条边上的法线进行缩放变换：X轴上缩放为原来的0.5倍。左边是变换前的状态，中间是将同样的模型变换矩阵应用在法线上的结果，显然是错的，法线并不垂直于切线。最右边的图是正确的结果。如何正确转换呢？</p>
+</li>
+<li><p>法线变换推导</p>
+<p> 假设某个模型的某个顶点的法线是N，切线是T，用矩阵表达他们乘法是 ：<br> T<sup>T</sup>N = 0；(矩阵T转置之后才能和N相乘，T转置之后由行向量变为列向量)<br> 假设切线和法线的变换矩阵分别是M和G，则：<br> (MT)<sup>T</sup>GN = 0；继而 T<sup>T</sup>M<sup>T</sup> GN = 0；既然T<sup>T</sup>N = 0，则可以推出：<br> M<sup>T</sup>G = 0；则法线的转换矩阵为：G = (M<sup>T</sup>)<sup>-1</sup> = (M<sup>-1</sup>)<sup>T</sup>。<br> <br><b>结论：</b><font color="#ff0000">应用于法线向量的变换矩阵是顶点变换矩阵的逆转置矩阵。</font></p>
+</li>
+<li><p>法线变换的优化</p>
+<p> 传统求解逆转置矩阵的方法固然有效，但是求逆矩阵有时候不是必须的，而且有的时候逆矩阵也不存在。逆矩阵是矩阵的伴随矩阵除以矩阵的行列式的值，但是当矩阵是奇异阵的时候，行列式的值是0，这个时候逆矩阵就不存在。</p>
+<p><b>即便是求解一个4*4矩阵的伴随矩阵也是复杂的，而且有时候也不是必须的。</b>由于平移操作不影响法线向量。而且大多数模型变换都是仿射变换。</p>
+<p>关于仿射变换（AffineTransform）：</p>
+<p>AffineTransform类描述了一种二维仿射变换流程图射变换的功能，它是一种二维坐标到二维坐标之间的线性变换，保持二维图形的“平直性”（译注： straightness，即变换后直线还是直线不会打弯，圆弧还是圆弧）和“平行性”（译注：par  常用的仿射变换:旋转、倾斜、平移、缩放allelness，其实是指保二维图形间的相对位置关系不变，平行线还是平行线，而直线上点的位置顺序不变，另特别注意向量间夹角可能会发生变化。仿射变换可以通过一系列的原子变换的复合来实现，包括：平移（Translation）、缩放（Scale）、翻转（Flip）、旋转（Rotation）和错切（Shear）。</p>
+<p>因此，他们不会改变齐次坐标的w分量。例如，没有投影变换的时候。因此，这个时候只需要计算矩阵左上方3*3子矩阵的伴随矩阵即可。</p>
+<p>在很多情况下，甚至是求解上述的3*3伴随矩阵都不需要。假设我们知道变换矩阵是由一系列平移、旋转、等方缩放（uniform scaling）组成的，<b>平移不影响法线，等比缩放的只影响法线的长度。</b>剩下需要考虑的就只有旋转变换了。而<font color="red"><b>旋转矩阵有一个很重要的特定就是它的转置矩阵和逆矩阵相等。因此，这个时候逆转置矩阵就是原来的矩阵，这个时候就不需要任何计算。</b></font></p>
+<p>最后需要注意的是，<font color="red"><b>对法线向量进行归一化不总是必须的。如果只有平移和旋转矩阵，那么法线长度不会发生改变。如果也有等方缩放，那么直接用它的缩放因子进行归一化。</b></font></p>
+<p>针对那些在变换之后，依据三角形边的叉积计算法线的情况，就不需要计算法线变换矩阵了。<font color="red"><b>注意：切向量和法线不同，切线是依据原始的矩阵进行变换的。</b></font></p>
+</li>
+</ul>
 
       
     </div>
@@ -486,7 +379,7 @@ private draw():void
       
         <div class="post-tags">
           
-            <a href="/tags/webgl-graphics/" rel="tag"># webgl, graphics</a>
+            <a href="/tags/normal-transform/" rel="tag"># normal transform</a>
           
         </div>
       
@@ -499,8 +392,8 @@ private draw():void
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/04/14/babybirth/" rel="next" title="欢迎小可乐到新世界来">
-                <i class="fa fa-chevron-left"></i> 欢迎小可乐到新世界来
+              <a href="/2018/06/23/webgl/" rel="next" title="WebGL2D纹理映射">
+                <i class="fa fa-chevron-left"></i> WebGL2D纹理映射
               </a>
             
           </div>
@@ -508,10 +401,6 @@ private draw():void
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/04/14/webgl-complex-buffer-data/" rel="prev" title="WebGL用单缓冲区传递复合顶点属性到Shader">
-                WebGL用单缓冲区传递复合顶点属性到Shader <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -579,7 +468,7 @@ private draw():void
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -590,7 +479,7 @@ private draw():void
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">categories</span>
                 
               </div>
@@ -601,7 +490,7 @@ private draw():void
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>
