@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>js-summary | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Location location的属性 获取location参数的方法  function getQueryArgs() {   let qs = location.search.length &amp;gt; 0 ? location.search.substring(1) : &apos;&apos;;   let args = {};   let items = qs.length ? qs.split(&apos;&amp;&apos;) : []">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js-summary">
+<meta property="og:url" content="http://yoursite.com/2018/09/10/js-summary/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Location location的属性 获取location参数的方法  function getQueryArgs() {   let qs = location.search.length &amp;gt; 0 ? location.search.substring(1) : &apos;&apos;;   let args = {};   let items = qs.length ? qs.split(&apos;&amp;&apos;) : []">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/blog-imgs/location-property.png">
+<meta property="og:image" content="http://yoursite.com/blog-imgs/location-modify.png">
+<meta property="og:updated_time" content="2018-09-10T12:58:32.758Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="js-summary">
+<meta name="twitter:description" content="Location location的属性 获取location参数的方法  function getQueryArgs() {   let qs = location.search.length &amp;gt; 0 ? location.search.substring(1) : &apos;&apos;;   let args = {};   let items = qs.length ? qs.split(&apos;&amp;&apos;) : []">
+<meta name="twitter:image" content="http://yoursite.com/blog-imgs/location-property.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-js-summary" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/09/10/js-summary/" class="article-date">
+  <time datetime="2018-09-10T11:49:27.000Z" itemprop="datePublished">2018-09-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/programming/">programming</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      js-summary
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Location"><a href="#Location" class="headerlink" title="Location"></a>Location</h3><ul>
+<li>location的属性<br><img src="/blog-imgs/location-property.png" alt="location properties"></li>
+<li><p>获取location参数的方法</p>
+<pre><code>
+function getQueryArgs() {
+  let qs = location.search.length > 0 ? location.search.substring(1) : '';
+  let args = {};
+  let items = qs.length ? qs.split('&') : [];
+  let len = items.length;
+
+  for (let i = 0; i < len; i++) {
+
+    let item = items[i].split('=');
+    let name = decodeURIComponent(item[0]);
+    let value = decodeURIComponent(item[1]);
+    if (name.length) {
+      args[name] = value;
+    }
+  }
+  return args;
+}
+</code></pre> 
+</li>
+<li><p>location的位置</p>
+<ul>
+<li>location.assign(url)</li>
+<li>window.location</li>
+<li>location.href</li>
+</ul>
+<p>这三个方法是等价的。对于location属性的修改，如下图<br><img src="/blog-imgs/location-modify.png" alt="location modify"><br>location.hash, search, hostname, pathname, port 任何属性的修改，都会在history中重新生成一条记录；除了hash外，所有的改变都会导致页面重新加载。</p>
+<ul>
+<li>location.replace(url)</li>
+</ul>
+<p>本方法功能同assign，但不会在history生成新记录。</p>
+<ul>
+<li>location.reload(force)</li>
+</ul>
+<p>重新加载页面。如果force=false或不传，则页面会被以最优方式加载，即如果页面没有改动，则直接从缓存加载；如果传true，则强制从服务器重新加载。 </p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/09/10/js-summary/" data-id="cjlwarg570002ga6z3y7xhlex" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/09/10/js-summary-1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          js-summary
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/06/22/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hello World</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/programming/">programming</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/09/10/js-summary-1/">js-summary</a>
+          </li>
+        
+          <li>
+            <a href="/2018/09/10/js-summary/">js-summary</a>
+          </li>
+        
+          <li>
+            <a href="/2018/06/22/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
