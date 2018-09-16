@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="webgl, graphics," />
 
 
 
@@ -79,17 +79,21 @@
 
 
 
-<meta name="description" content="some article links here below, about webgl/opengl/graphics. GLSL The Shader Language for WebGL The GLSL1.0 API introduction  OpenGL/WebGL LearnOpenGL CN opengl渲染管线详解 WebGL官方API文档 WebGL教程">
+<meta name="description" content="总结一下WebGL中，2d纹理映射。本文只包含单纹理映射。加载shader文件，初始化WebGL上下文，加载需要映射到WebGL的图片：  private gl:WebGLRenderingContext; private shaderLoader:ShaderLoader;  public constructor() {     this.shaderLoader = new ShaderLoa">
+<meta name="keywords" content="webgl, graphics">
 <meta property="og:type" content="article">
-<meta property="og:title" content="OpenGL&#x2F;WebGL相关链接">
-<meta property="og:url" content="https://yaozhiguo2016.github.io/2018/09/09/webgl-related-links/index.html">
+<meta property="og:title" content="WebGL2D纹理映射">
+<meta property="og:url" content="https://yaozhiguo2016.github.io/2018/09/16/webgl/index.html">
 <meta property="og:site_name" content="一杯苦茶水的世界">
-<meta property="og:description" content="some article links here below, about webgl/opengl/graphics. GLSL The Shader Language for WebGL The GLSL1.0 API introduction  OpenGL/WebGL LearnOpenGL CN opengl渲染管线详解 WebGL官方API文档 WebGL教程">
+<meta property="og:description" content="总结一下WebGL中，2d纹理映射。本文只包含单纹理映射。加载shader文件，初始化WebGL上下文，加载需要映射到WebGL的图片：  private gl:WebGLRenderingContext; private shaderLoader:ShaderLoader;  public constructor() {     this.shaderLoader = new ShaderLoa">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-09-09T04:18:46.274Z">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/2cood.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/draw-img.png">
+<meta property="og:updated_time" content="2018-06-23T02:13:31.360Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="OpenGL&#x2F;WebGL相关链接">
-<meta name="twitter:description" content="some article links here below, about webgl/opengl/graphics. GLSL The Shader Language for WebGL The GLSL1.0 API introduction  OpenGL/WebGL LearnOpenGL CN opengl渲染管线详解 WebGL官方API文档 WebGL教程">
+<meta name="twitter:title" content="WebGL2D纹理映射">
+<meta name="twitter:description" content="总结一下WebGL中，2d纹理映射。本文只包含单纹理映射。加载shader文件，初始化WebGL上下文，加载需要映射到WebGL的图片：  private gl:WebGLRenderingContext; private shaderLoader:ShaderLoader;  public constructor() {     this.shaderLoader = new ShaderLoa">
+<meta name="twitter:image" content="https://yaozhiguo2016.github.io/blog-imgs/2cood.png">
 
 
 
@@ -119,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="https://yaozhiguo2016.github.io/2018/09/09/webgl-related-links/"/>
+  <link rel="canonical" href="https://yaozhiguo2016.github.io/2018/09/16/webgl/"/>
 
 
 
 
 
-  <title>OpenGL/WebGL相关链接 | 一杯苦茶水的世界</title>
+  <title>WebGL2D纹理映射 | 一杯苦茶水的世界</title>
   
 
 
@@ -252,7 +256,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yaozhiguo2016.github.io/2018/09/09/webgl-related-links/">
+    <link itemprop="mainEntityOfPage" href="https://yaozhiguo2016.github.io/2018/09/16/webgl/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="yaozhiguo">
@@ -269,7 +273,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">OpenGL/WebGL相关链接</h1>
+          <h1 class="post-title" itemprop="name headline">WebGL2D纹理映射</h1>
         
 
         <div class="post-meta">
@@ -281,8 +285,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-09T11:58:06+08:00">
-                2018-09-09
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-16T21:41:31+08:00">
+                2018-09-16
               </time>
             
 
@@ -341,20 +345,130 @@
       
 
       
-        <ul>
-<li><p>some article links here below, about webgl/opengl/graphics.</p>
-<h3 id="GLSL"><a href="#GLSL" class="headerlink" title="GLSL"></a>GLSL</h3><ul>
-<li><a href="http://math.hws.edu/eck/cs424/notes2013/19_GLSL.html" target="_blank" rel="noopener">The Shader Language for WebGL</a></li>
-<li><a href="https://blog.csdn.net/hgl868/article/details/7876257" target="_blank" rel="noopener">The GLSL1.0 API introduction</a></li>
-</ul>
-<h3 id="OpenGL-WebGL"><a href="#OpenGL-WebGL" class="headerlink" title="OpenGL/WebGL"></a>OpenGL/WebGL</h3><ul>
-<li><a href="https://learnopengl-cn.github.io/" target="_blank" rel="noopener">LearnOpenGL CN</a></li>
-<li><a href="https://blog.csdn.net/cjneo/article/details/50538033" target="_blank" rel="noopener">opengl渲染管线详解</a></li>
-<li><a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/" target="_blank" rel="noopener">WebGL官方API文档</a></li>
-<li><a href="http://www.yanhuangxueyuan.com/" target="_blank" rel="noopener">WebGL教程</a></li>
-</ul>
-</li>
-</ul>
+        <p>总结一下WebGL中，2d纹理映射。本文只包含单纹理映射。<br>加载shader文件，初始化WebGL上下文，加载需要映射到WebGL的图片：</p>
+<pre><code>
+private gl:WebGLRenderingContext;
+private shaderLoader:ShaderLoader;
+
+public constructor()
+{
+    this.shaderLoader = new ShaderLoader();
+    this.shaderLoader.load('shaders/simple_texture/vertex.glsl',
+            'shaders/simple_texture/fragment.glsl');
+    this.shaderLoader.addEventListener('ShaderComplete', this.onShaderComplete, this);
+}
+
+private onShaderComplete(event:Event):void
+{
+    this.gl = RenderContext.createConext();
+    let shader:ShaderResult = event.data;
+    initShaders(this.gl, shader.vert, shader.frag);
+    this.loadImage();
+}
+
+private loadImage():void
+{
+    let image:HTMLImageElement = new Image(); // Create an image object
+    image.onload = ()=>{
+        this.initTexture(image);
+        this.initVertexBuffers();
+        this.draw();
+    };
+    image.src = 'resource/sky.JPG';
+}
+</code></pre>
+
+<p>对应的shaders,分别是顶点shader和片元shader：</p>
+<pre><code>
+attribute vec4 a_Position;
+attribute vec2 a_TexCood;
+varying vec2 v_TexCood;
+
+void main() {
+    gl_Position = a_Position;
+    v_TexCood = a_TexCood;
+}
+</code></pre>
+
+<pre><code>
+precision mediump float;
+
+uniform sampler2D u_sampler2d;
+varying vec2 v_TexCood;
+
+void main() {
+    gl_FragColor = texture2D(u_sampler2d, v_TexCood);
+}
+</code></pre>
+
+<p>初始化顶点信息：</p>
+<pre><code>
+private initVertexBuffers():void
+{
+    let vertTexs:Float32Array = new Float32Array([
+        -0.5, 0.5,  0.0, 1.0,
+        -0.5, -0.5, 0.0, 0.0,
+        0.5, 0.5,  1.0, 1.0,
+        0.5, -0.5, 1.0, 0.0
+    ]);
+    let gl:WebGLRenderingContext = this.gl;
+    let vertTexBuffer:WebGLBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertTexBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, vertTexs, gl.STATIC_DRAW);
+
+    let FLOAT32_SIZE:number = vertTexs.BYTES_PER_ELEMENT;
+
+    let a_Position:number = gl.getAttribLocation(gl['program'], 'a_Position');
+    gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, FLOAT32_SIZE * 4, 0);
+    gl.enableVertexAttribArray(a_Position);
+
+    let a_TexCood:number = gl.getAttribLocation(gl['program'], 'a_TexCood');
+    gl.vertexAttribPointer(a_TexCood, 2, gl.FLOAT, false, FLOAT32_SIZE * 4, FLOAT32_SIZE * 2);
+    gl.enableVertexAttribArray(a_TexCood);
+}
+</code></pre>
+
+<p>顶点数据的数组每一行中(如-0.5, 0.5, 0.0, 1.0)，包含了顶点坐标和纹理坐标(各占两个元素)，纹理坐标的范围是0-1.<br>通过a_Position和a_TexCood参数分别把这两种坐标数据传入顶点shader中。顶点shader在经历图元装配和光栅化过程之后，获得的片元坐标插值保存于v_TexCood中，然后传入片元shader，通过texture2D(u_sampler2d, v_TexCood)的采样操作，获取片元的颜色值，赋值给g_FragColor的内建变量。</p>
+<p>初始化纹理信息：</p>
+<pre><code>
+private initTexture(image:HTMLImageElement):void
+{
+    let gl:WebGLRenderingContext = this.gl;
+    let texture:WebGLTexture = gl.createTexture(); // Create a texture object
+    // Get the storage location of the u_Sampler
+    let u_Sampler:WebGLUniformLocation = gl.getUniformLocation(gl['program'], 'u_sampler2d');
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image's y axis
+    // Enable the texture unit 0
+    gl.activeTexture(gl.TEXTURE0);
+    // Bind the texture object to the target
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+
+    // Set the texture parameters
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    // Set the texture image
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+
+    // Set the texture unit 0 to the sampler
+    gl.uniform1i(u_Sampler, 0);
+}
+</code></pre>
+
+<p>这个方法集中了对纹理相关的操作。<br>gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image’s y axis<br>这个方法是对DOM的图片元素进行了翻转，因为二者的坐标的Y方向相反，如果不翻转，映射的结果是和原始图片的方向相反。</p>
+<p><img src="/blog-imgs/2cood.png" alt=""></p>
+<p>gl.activeTexture(gl.TEXTURE0);<br>这个方法用于激活纹理单元。WebGL系统支持多重纹理绘制，即在同一个UV纹理坐标上，可以同时叠加颜色。WebGL至少支持8重纹理叠加：gl.TEXTURE0,…glTEXTURE7.不同的浏览器实现有所差别。<br>gl.bindTexture(gl.TEXTURE_2D, texture);<br>这个方法用于绑定纹理目标，和顶点数组类似，纹理目标也对应纹理的类型，纹理类型在WebGL中包含：gl.TEXTURE_2D (2维纹理)和gl.TEXTURE_CUBE_MAP(立方体纹理).<br>gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);<br>这个方法用于设置纹理参数。</p>
+<p>gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);<br>给纹理目标赋予数据对象(图片数据)。</p>
+<p>WebGL绘制：</p>
+<pre><code>
+private draw():void
+{
+    this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+    this.gl.drawArrays(this.gl.TRIANGLE_STRIP, 0, 4);
+}
+</code></pre>
+
+<p>最后的效果图：</p>
+<p><img src="/blog-imgs/draw-img.png" alt=""></p>
 
       
     </div>
@@ -370,6 +484,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/webgl-graphics/" rel="tag"># webgl, graphics</a>
+          
+        </div>
+      
 
       
       
@@ -379,8 +499,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/23/3d-normal-transform/" rel="next" title="3D中的法线变换">
-                <i class="fa fa-chevron-left"></i> 3D中的法线变换
+              <a href="/2018/09/09/webgl-related-links/" rel="next" title="OpenGL/WebGL相关链接">
+                <i class="fa fa-chevron-left"></i> OpenGL/WebGL相关链接
               </a>
             
           </div>
@@ -389,8 +509,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/09/16/webgl/" rel="prev" title="WebGL2D纹理映射">
-                WebGL2D纹理映射 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/09/16/js-summary/" rel="prev" title="js-summary">
+                js-summary <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -443,17 +563,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -513,22 +624,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#GLSL"><span class="nav-number">1.</span> <span class="nav-text">GLSL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OpenGL-WebGL"><span class="nav-number">2.</span> <span class="nav-text">OpenGL/WebGL</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
