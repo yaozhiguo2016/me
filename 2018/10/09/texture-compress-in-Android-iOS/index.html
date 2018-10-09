@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="texture compress," />
 
 
 
@@ -79,16 +79,18 @@
 
 
 
-<meta name="description" content="这里是一片广阔的天地">
-<meta property="og:type" content="website">
-<meta property="og:title" content="一杯苦茶水的世界">
-<meta property="og:url" content="https://yaozhiguo2016.github.io/tags/normal-transform/index.html">
+<meta name="description" content="移动设备内存有限，为了节省内存，一般都会对贴图进行压缩。一张4MB的贴图，在移动设备中压缩之后只有1/8，也就是0.5MB。 假如有一张1024px * 1024px的4通道(RGBA8888，每个通道都为8bit)贴图。一般来说，一张纹理所占用的内存的计算方式为长乘以框再撑每个像素的比特数，计算公式日下：  内存 = 长 ✖️ 宽 ✖️ 像素比特数 那么这张图所长的内存为：1024 ✖️ 102">
+<meta name="keywords" content="texture compress">
+<meta property="og:type" content="article">
+<meta property="og:title" content="texture compress in Android&amp;iOS">
+<meta property="og:url" content="https://yaozhiguo2016.github.io/2018/10/09/texture-compress-in-Android-iOS/index.html">
 <meta property="og:site_name" content="一杯苦茶水的世界">
-<meta property="og:description" content="这里是一片广阔的天地">
+<meta property="og:description" content="移动设备内存有限，为了节省内存，一般都会对贴图进行压缩。一张4MB的贴图，在移动设备中压缩之后只有1/8，也就是0.5MB。 假如有一张1024px * 1024px的4通道(RGBA8888，每个通道都为8bit)贴图。一般来说，一张纹理所占用的内存的计算方式为长乘以框再撑每个像素的比特数，计算公式日下：  内存 = 长 ✖️ 宽 ✖️ 像素比特数 那么这张图所长的内存为：1024 ✖️ 102">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-10-09T05:35:53.923Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="一杯苦茶水的世界">
-<meta name="twitter:description" content="这里是一片广阔的天地">
+<meta name="twitter:title" content="texture compress in Android&amp;iOS">
+<meta name="twitter:description" content="移动设备内存有限，为了节省内存，一般都会对贴图进行压缩。一张4MB的贴图，在移动设备中压缩之后只有1/8，也就是0.5MB。 假如有一张1024px * 1024px的4通道(RGBA8888，每个通道都为8bit)贴图。一般来说，一张纹理所占用的内存的计算方式为长乘以框再撑每个像素的比特数，计算公式日下：  内存 = 长 ✖️ 宽 ✖️ 像素比特数 那么这张图所长的内存为：1024 ✖️ 102">
 
 
 
@@ -118,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://yaozhiguo2016.github.io/tags/normal-transform/"/>
+  <link rel="canonical" href="https://yaozhiguo2016.github.io/2018/10/09/texture-compress-in-Android-iOS/"/>
 
 
 
 
 
-  <title>Tag: normal transform | 一杯苦茶水的世界</title>
+  <title>texture compress in Android&iOS | 一杯苦茶水的世界</title>
   
 
 
@@ -143,7 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -237,54 +239,185 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>normal transform<small>Tag</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yaozhiguo2016.github.io/2018/10/09/texture-compress-in-Android-iOS/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yaozhiguo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一杯苦茶水的世界">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/06/23/3d-normal-transform/" itemprop="url">
-              
-                <span itemprop="name">3D中的法线变换</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">texture compress in Android&iOS</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-06-23T10:15:48+08:00"
-              content="2018-06-23" >
-          06-23
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-09T13:22:53+08:00">
+                2018-10-09
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/game-develop/" itemprop="url" rel="index">
+                    <span itemprop="name">game-develop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>移动设备内存有限，为了节省内存，一般都会对贴图进行压缩。<br>一张4MB的贴图，在移动设备中压缩之后只有1/8，也就是0.5MB。</p>
+<p>假如有一张1024px * 1024px的4通道(RGBA8888，每个通道都为8bit)贴图。<br>一般来说，一张纹理所占用的内存的计算方式为长乘以框再撑每个像素的比特数，计算公式日下：</p>
+<p><code><br> 内存 = 长 ✖️ 宽 ✖️ 像素比特数<br></code></p>
+<p>那么这张图所长的内存为：1024 ✖️ 1024 ✖️ 4 ✖️ 8 bit = 1024 ✖️ 1024 ✖️ 4 Byte = 4MB, 即一个像素占 32bit == 4Byte。</p>
+<hr>
+
+<ul>
+<li>Android设备</li>
+</ul>
+<p>Android设备中一般使用ETC1压缩，一种有损的图像压缩方式。<br>ETC1是OpenGL2.0支持的标准，压缩之后每个像素占4bit，压缩之后的格式为KTX或者PKM，前者支持存储多纹理，后者只支持单纹理。<br>上面的图片压缩之后的大小为：1024 <em> 1024 </em> 4 bit = 0.5MB<br>ETC1的缺点是不支持Alpha通道，不支持有透明度的图片压缩。<br>ETC2解决了Alpha通道，但是它是OpenGL3.0标准，考虑到2.0设备的市场占有率，一般使用ETC1。 </p>
+<ul>
+<li>iOS设备</li>
+</ul>
+<p>iOS设备中采用的图像格式一般是PVR，也是一种有损的图像压缩方式。</p>
+<p>PVR压缩分为两种，PVRTC2和PVRTC4。<br>PVRTC4：Compressed format, 4 bits per pixel, ok image quality<br>PVRTC2：Compressed format, 2 bits per pixel, poor image quality</p>
+<p>常用的PVRTC4，压缩之后的大小为：1024 <em> 1024 </em> 4 bit = 0.5MB<br>除了压缩内存，PVR可以直接被显卡读取，载入速度更快；缺点是PVR需要PowerVR芯片支持，目前iOS设备都能完美支持，Android支持尚少；此外，PVRTC4只支持方形贴图，非方形会被处理成方形，且长宽必须为2的幂。</p>
+<p>关于PVR压缩算法可以参考：<a href="http://web.onetel.net.uk/~simonnihal/assorted3d/fenney03texcomp.pdf" target="_blank" rel="noopener">http://web.onetel.net.uk/~simonnihal/assorted3d/fenney03texcomp.pdf</a></p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/texture-compress/" rel="tag"># texture compress</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/16/js-summary/" rel="next" title="JS基础知识总结·-">
+                <i class="fa fa-chevron-left"></i> JS基础知识总结·-
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -292,6 +425,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -502,6 +639,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
