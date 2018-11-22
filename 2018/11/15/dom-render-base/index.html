@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="dom render, webkit," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="背景由于开发手淘内游戏面临的特定机型crash问题，最近在拜读朱永盛老师的《webkit技术内幕》，希望能发现crash的一些可能的原因。主要从渲染原理上切入，现在我把学习的内容总结一下，算是给自己有一个交代。 DOM树和RenderObject树 DOM树 浏览器中的DOM元素以树形结构组织起来，DOM元素主要有可视化元素和非可视化元素。DOM结构树大致形如下图：   RenderObject树">
+<meta name="keywords" content="dom render, webkit">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DOM渲染基础">
+<meta property="og:url" content="https://yaozhiguo2016.github.io/2018/11/15/dom-render-base/index.html">
+<meta property="og:site_name" content="一杯苦茶水的世界">
+<meta property="og:description" content="背景由于开发手淘内游戏面临的特定机型crash问题，最近在拜读朱永盛老师的《webkit技术内幕》，希望能发现crash的一些可能的原因。主要从渲染原理上切入，现在我把学习的内容总结一下，算是给自己有一个交代。 DOM树和RenderObject树 DOM树 浏览器中的DOM元素以树形结构组织起来，DOM元素主要有可视化元素和非可视化元素。DOM结构树大致形如下图：   RenderObject树">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/webkit/dom-tree.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/webkit/renderNode-class.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/webkit/dom-tree-vs-render-tree.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/webkit/render-object-vs-layer.png">
+<meta property="og:updated_time" content="2018-11-19T12:54:19.122Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DOM渲染基础">
+<meta name="twitter:description" content="背景由于开发手淘内游戏面临的特定机型crash问题，最近在拜读朱永盛老师的《webkit技术内幕》，希望能发现crash的一些可能的原因。主要从渲染原理上切入，现在我把学习的内容总结一下，算是给自己有一个交代。 DOM树和RenderObject树 DOM树 浏览器中的DOM元素以树形结构组织起来，DOM元素主要有可视化元素和非可视化元素。DOM结构树大致形如下图：   RenderObject树">
+<meta name="twitter:image" content="https://yaozhiguo2016.github.io/blog-imgs/webkit/dom-tree.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yaozhiguo2016.github.io/2018/11/15/dom-render-base/"/>
+
+
+
+
+
+  <title>DOM渲染基础 | 一杯苦茶水的世界</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">一杯苦茶水的世界</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">欢迎来的我的世界</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archives"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yaozhiguo2016.github.io/2018/11/15/dom-render-base/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yaozhiguo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一杯苦茶水的世界">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">DOM渲染基础</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-15T17:30:49+08:00">
+                2018-11-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/webkit/" itemprop="url" rel="index">
+                    <span itemprop="name">webkit</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>由于开发手淘内游戏面临的特定机型crash问题，最近在拜读朱永盛老师的《webkit技术内幕》，希望能发现crash的一些可能的原因。主要从渲染原理上切入，现在我把学习的内容总结一下，算是给自己有一个交代。</p>
+<h3 id="DOM树和RenderObject树"><a href="#DOM树和RenderObject树" class="headerlink" title="DOM树和RenderObject树"></a>DOM树和RenderObject树</h3><ul>
+<li><p>DOM树 <br><br>浏览器中的DOM元素以树形结构组织起来，DOM元素主要有可视化元素和非可视化元素。DOM结构树大致形如下图：</p>
+<div style="align: left"><img src="/blog-imgs/webkit/dom-tree.png" width="300" height="280"></div>
+</li>
+<li><p>RenderObject树 <br><br>DOM树被webkit构建之后，就需要构建本DOM树对应的RenderObject树。一个RenderObject节点包含了绘制本节点所需要的各种信息，如相对位置，绘制上下文等，这些节点构成了一颗新树，这颗新树是为了属性递归计算和渲染所需而构建的内部表示。注意，RenderObject节点和DOM节点并非一一对应，<br>具备以下条件的节点才会被webkit创建对应的RenderObject对象：</p>
+<ol>
+<li>DOM树的document节点；</li>
+<li>DOM树种的可视化节点，如html,div,img,canvas等，webkit不会为非可视化元素，如meta，script等创建RenderObject节点；</li>
+<li>某些匿名的RenderObject对象，该对象不对应DOM中的任何节点，而是webkit处理的需要。典型的例子就是RenderBlock节点；</li>
+<li>影子节点，如video组件中的播放控制栏，虽然js无法访问这些节点，但是需要渲染，所以也会为其创建RenderObject节点；</li>
+</ol>
+<p>RenderObject节点对象包含了一系列类似于DOM节点的API，除此之外，最重要的一组接口是与测算和绘图相关的，如paint，repaint等。</p>
+<div style="align: left"><img src="/blog-imgs/webkit/renderNode-class.png" width="600" height="400"></div>
+
+<p><em>图中的RenderBoxModelObject是描述所有跟css样式中框模型相关的类的基类；RenderBlock用来表示块元素。</em></p>
+<p><strong>RenderObject对象以及RenderObject树的基本过程</strong>：<br>Webkit先检查DOM节点是否需要创建RenderObject对象，如果需要，webkit建立或者获取一个创建RenderObject对象的NodeRenderingContext对象，NodeRenderingContext对象会分析需要创建的RenderObject对象的父亲节点、兄弟节点等，设置这些信息后完成插入树的动作。建立后的RenderObject树和DOM树之间的对应关系大致如图：</p>
+<div style="align: left"><img src="/blog-imgs/webkit/dom-tree-vs-render-tree.png" width="600" height="400"></div>
+
+<p><em>HTMLDocument节点对应RenderView节点，RenderView节点是RenderObject树的根节点</em></p>
+</li>
+</ul>
+<h3 id="RenderLayer和RenderLayer树"><a href="#RenderLayer和RenderLayer树" class="headerlink" title="RenderLayer和RenderLayer树"></a>RenderLayer和RenderLayer树</h3><ul>
+<li>网页分层渲染<br>网页上的DOM对象在渲染之前，都会按照一定逻辑划分不同的层次，这主要基于两方面考虑：一是数据结构的管理，二是渲染的优化。对于不同层次的划分，方便利用组合来递归管理；而对于渲染来说，分层可以对特定层次单独渲染，而不是每次渲染所有对象。</li>
+<li><p>RenderLayer<br>在理想情况下，网页的每个层次会被webkit创建对应的RenderLayer对象，一个RenderObject树约略对应一个RenderLayer节点，除非该RenderObject树中有节点具备某些规则，需要webkit单独为其创建对应的RenderLayer对象。RenderObject节点需要被创建对应RenderLayer取决于以下基本规则：</p>
+<ol>
+<li>DOM树的Document节点对应的RenderView节点。</li>
+<li>DOM树种的Document的子女节点，也就是HTML节点对应的RenderBlock节点。</li>
+<li>显示的指定CSS位置的RenderObject节点。</li>
+<li>有透明效果的RenderObject节点。</li>
+<li>节点有溢出（Overflow）、alpha或者反射等效果的RenderObject节点。</li>
+<li>使用Canvas2d或3D（WebGL)技术的RenderObject节点。</li>
+<li>Video节点对应的RenderObject节点。</li>
+</ol>
+<p>是否需要为RenderObject单独创建RenderLayer，取决于绘制效率和层次管理复杂度的平衡；因为RenderLayer是重绘区域的基本单位，RenderObject是绘制的基本单位，如果一个RenderObject节点复杂，而它所在的树其他节点都无需重绘，那么单独为其创建RenderLayer来重绘会比较划算。</p>
+</li>
+<li><p>RenderLayer树<br>除了根节点，一个RenderLayer的父亲就是该RenderLayer对应的RenderObject节点祖先链中最近的祖先，并且祖先所在的RenderLayer节点同该节点的RenderLayer节点不同。基于这一原理，这些RenderLayer节点也构成了一颗RenderLayer树。</p>
+<p>理想情况下，一个RenderLayer对象会存在一个后端存储类与之对应，用于存储这个RenderLayer绘制的结果数据。</p>
+<p>RenderObject树和RenderLayer树之间的关系：</p>
+<div style="align: left"><img src="/blog-imgs/webkit/render-object-vs-layer.png" width="600" height="350"></div> 
+
+</li>
+</ul>
+<h3 id="Render-Context"><a href="#Render-Context" class="headerlink" title="Render Context"></a>Render Context</h3>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/dom-render-webkit/" rel="tag"># dom render, webkit</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/09/texture-compress-in-Android-iOS/" rel="next" title="texture compress in Android&iOS">
+                <i class="fa fa-chevron-left"></i> texture compress in Android&iOS
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/15/dom-gpu-render/" rel="prev" title="基于GPU的DOM渲染">
+                基于GPU的DOM渲染 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">yaozhiguo</p>
+              <p class="site-description motion-element" itemprop="description">这里是一片广阔的天地</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DOM树和RenderObject树"><span class="nav-number">2.</span> <span class="nav-text">DOM树和RenderObject树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RenderLayer和RenderLayer树"><span class="nav-number">3.</span> <span class="nav-text">RenderLayer和RenderLayer树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Render-Context"><span class="nav-number">4.</span> <span class="nav-text">Render Context</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yaozhiguo</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><a target="_blank" href="http://www.miitbeian.gov.cn/publish/query/indexFirst.action">鄂ICP备17008413号</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
