@@ -87,12 +87,12 @@
 <meta property="og:site_name" content="一杯苦茶水的世界">
 <meta property="og:description" content="顶点和法线的区别  在齐次坐标系中，一个顶点的表达式为(x, y, z, 1);而一个法线的表达式为（x, y, z, 0)。法线向量的最后一个元素w=0，表示该点位于无穷远处，即只具备方向的唯一性，而不具备位置特性。而顶点位置向量的w=1，这是一个3D的点在齐次坐标系中默认的投影面。顶点位置向量同时具备方向和位置特性。 3✖️3矩阵表达的都是线性变换，无法表达平移变换。为了可以支持矩阵对平移的">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://my.csdn.net/uploads/201207/19/1342681659_1427.jpg">
-<meta property="og:updated_time" content="2018-06-23T02:18:02.113Z">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/normal_transform.jpg">
+<meta property="og:updated_time" content="2018-11-22T03:26:06.061Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="3D中的法线变换">
 <meta name="twitter:description" content="顶点和法线的区别  在齐次坐标系中，一个顶点的表达式为(x, y, z, 1);而一个法线的表达式为（x, y, z, 0)。法线向量的最后一个元素w=0，表示该点位于无穷远处，即只具备方向的唯一性，而不具备位置特性。而顶点位置向量的w=1，这是一个3D的点在齐次坐标系中默认的投影面。顶点位置向量同时具备方向和位置特性。 3✖️3矩阵表达的都是线性变换，无法表达平移变换。为了可以支持矩阵对平移的">
-<meta name="twitter:image" content="http://my.csdn.net/uploads/201207/19/1342681659_1427.jpg">
+<meta name="twitter:image" content="https://yaozhiguo2016.github.io/blog-imgs/normal_transform.jpg">
 
 
 
@@ -346,7 +346,7 @@
       
         <ul>
 <li><p>顶点和法线的区别</p>
-<p> 在齐次坐标系中，一个顶点的表达式为(x, y, z, 1);而一个法线的表达式为（x, y, z, 0)。法线向量的最后一个元素w=0，表示该点位于无穷远处，即只具备方向的唯一性，而不具备位置特性。而顶点位置向量的w=1，这是一个3D的点在齐次坐标系中默认的投影面。顶点位置向量同时具备方向和位置特性。<br> 3✖️3矩阵表达的都是线性变换，无法表达平移变换。为了可以支持矩阵对平移的表达，进而完成平移、缩放和旋转等变换的联合操作(矩阵相乘)，通常都用4✖️4矩阵来表达各种变换。对于平移变换，顶点位置和顶点法线向量分别通过4✖️4矩阵变换，可以得到正常的结果。<br>  顶点位置在经过某些矩阵变换之后，对应的顶点法线该如何变换呢？先看一张图：<br>  <img src="http://my.csdn.net/uploads/201207/19/1342681659_1427.jpg" alt="法线变换图"><br>上图是对一个多边形以及一条边上的法线进行缩放变换：X轴上缩放为原来的0.5倍。左边是变换前的状态，中间是将同样的模型变换矩阵应用在法线上的结果，显然是错的，法线并不垂直于切线。最右边的图是正确的结果。如何正确转换呢？</p>
+<p> 在齐次坐标系中，一个顶点的表达式为(x, y, z, 1);而一个法线的表达式为（x, y, z, 0)。法线向量的最后一个元素w=0，表示该点位于无穷远处，即只具备方向的唯一性，而不具备位置特性。而顶点位置向量的w=1，这是一个3D的点在齐次坐标系中默认的投影面。顶点位置向量同时具备方向和位置特性。<br> 3✖️3矩阵表达的都是线性变换，无法表达平移变换。为了可以支持矩阵对平移的表达，进而完成平移、缩放和旋转等变换的联合操作(矩阵相乘)，通常都用4✖️4矩阵来表达各种变换。对于平移变换，顶点位置和顶点法线向量分别通过4✖️4矩阵变换，可以得到正常的结果。<br>  顶点位置在经过某些矩阵变换之后，对应的顶点法线该如何变换呢？先看一张图：<br>  <img src="/blog-imgs/normal_transform.jpg" alt="法线变换图"><br>上图是对一个多边形以及一条边上的法线进行缩放变换：X轴上缩放为原来的0.5倍。左边是变换前的状态，中间是将同样的模型变换矩阵应用在法线上的结果，显然是错的，法线并不垂直于切线。最右边的图是正确的结果。如何正确转换呢？</p>
 </li>
 <li><p>法线变换推导</p>
 <p> 假设某个模型的某个顶点的法线是N，切线是T，用矩阵表达他们乘法是 ：<br> T<sup>T</sup>N = 0；(矩阵T转置之后才能和N相乘，T转置之后由行向量变为列向量)<br> 假设切线和法线的变换矩阵分别是M和G，则：<br> (MT)<sup>T</sup>GN = 0；继而 T<sup>T</sup>M<sup>T</sup> GN = 0；既然T<sup>T</sup>N = 0，则可以推出：<br> M<sup>T</sup>G = 0；则法线的转换矩阵为：G = (M<sup>T</sup>)<sup>-1</sup> = (M<sup>-1</sup>)<sup>T</sup>。<br> <br><b>结论：</b><font color="#ff0000">应用于法线向量的变换矩阵是顶点变换矩阵的逆转置矩阵。</font></p>
@@ -472,7 +472,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

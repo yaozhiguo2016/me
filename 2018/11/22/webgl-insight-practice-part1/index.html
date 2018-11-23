@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="概述WebGL开发人员可以做的最重要的事情是确保他们的应用程序健壮且高效，使用他们选择的浏览器的预稳定发布渠道进行开发和测试，并报告可疑的错误。当在ANGLE中部署新功能或优化时，它们将出现在首先使用它们的浏览器的预稳定版本中，使开发人员和早期采用者有时间遇到并报告错误，ANGLE团队有时间在大多数错误之前解决这些错误。Chrome Dev和Firefox Developer Edition都跟踪">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《WebGL insights》实践提示(一)">
+<meta property="og:url" content="https://yaozhiguo2016.github.io/2018/11/22/webgl-insight-practice-part1/index.html">
+<meta property="og:site_name" content="一杯苦茶水的世界">
+<meta property="og:description" content="概述WebGL开发人员可以做的最重要的事情是确保他们的应用程序健壮且高效，使用他们选择的浏览器的预稳定发布渠道进行开发和测试，并报告可疑的错误。当在ANGLE中部署新功能或优化时，它们将出现在首先使用它们的浏览器的预稳定版本中，使开发人员和早期采用者有时间遇到并报告错误，ANGLE团队有时间在大多数错误之前解决这些错误。Chrome Dev和Firefox Developer Edition都跟踪">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/webgl/triangle_fan.png">
+<meta property="og:updated_time" content="2018-11-23T04:19:07.376Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《WebGL insights》实践提示(一)">
+<meta name="twitter:description" content="概述WebGL开发人员可以做的最重要的事情是确保他们的应用程序健壮且高效，使用他们选择的浏览器的预稳定发布渠道进行开发和测试，并报告可疑的错误。当在ANGLE中部署新功能或优化时，它们将出现在首先使用它们的浏览器的预稳定版本中，使开发人员和早期采用者有时间遇到并报告错误，ANGLE团队有时间在大多数错误之前解决这些错误。Chrome Dev和Firefox Developer Edition都跟踪">
+<meta name="twitter:image" content="https://yaozhiguo2016.github.io/blog-imgs/webgl/triangle_fan.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yaozhiguo2016.github.io/2018/11/22/webgl-insight-practice-part1/"/>
+
+
+
+
+
+  <title>《WebGL insights》实践提示(一) | 一杯苦茶水的世界</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">一杯苦茶水的世界</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">欢迎来的我的世界</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archives"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yaozhiguo2016.github.io/2018/11/22/webgl-insight-practice-part1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yaozhiguo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一杯苦茶水的世界">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">《WebGL insights》实践提示(一)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-22T15:58:11+08:00">
+                2018-11-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/webgl/" itemprop="url" rel="index">
+                    <span itemprop="name">webgl</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>WebGL开发人员可以做的最重要的事情是确保他们的应用程序健壮且高效，使用他们选择的浏览器的预稳定发布渠道进行开发和测试，并报告可疑的错误。当在ANGLE中部署新功能或优化时，它们将出现在首先使用它们的浏览器的预稳定版本中，使开发人员和早期采用者有时间遇到并报告错误，ANGLE团队有时间在大多数错误之前解决这些错误。Chrome Dev和Firefox Developer Edition都跟踪ANGLE定期更新的版本。<br>此外，开发人员可以通过使用WebGL中的类型，格式和命令来确保最佳性能，这些类型，格式和命令需要ANGLE最少的干预才能交付给底层API。因为ANGLE必须根据给定用户正在使用的渲染器来转换调用各种特定的工作，所以最佳做法是：在任何ANGLE支持的平台上，了解并最小化地执行会导致计算密集的行为。</p>
+<h3 id="WebGL1-0-开发建议"><a href="#WebGL1-0-开发建议" class="headerlink" title="WebGL1.0 开发建议"></a>WebGL1.0 开发建议</h3><ul>
+<li><p><strong>避免使用LINE_LOOP和TRIANGLE_FAN</strong></p>
+<p>任何一个Direct3D API均不支持LINE_LOOP, Direct3D 11不支持TRIANGLE_FAN，所以ANGLE必须重写顶点索引(index buffers)以支持它们。对于LINE_LOOP绘制模式，这不算是 大问题，ANGLE可以通过复制LINE_TRIP模式下的第一个索引值就可以表示；但对于TRIANGLE_FAN，在Direct3D 11中，ANGLE必须使用扩展化index buffer的TRIANGLES来表示。在某些情况下，这种重写的影响可能是非常大的; 我们的一个基准测试表明，与TRIANGLES相比，特殊的异常情况导致TRIANGLE_FAN在一个测试系统上每帧需要额外5 ms的渲染时间。*</p>
+</li>
+<li><p><strong>创建新的纹理，而不是重新定义旧的</strong></p>
+<p>Direct3D API系列要求在创建时完全指定纹理及其mipmap链的格式和尺寸，并且它没有不完整纹理的概念。为了支持一次定义一个mipmap级别的纹理，ANGLE在系统内存中维护这些纹理的副本，只有当它们最终被渲染命令使用时才能创建GPU可访问的纹理。一旦创建了该纹理，改变其任何组成级别的格式或尺寸的消耗都会比仍在系统内存中维护的新创建的纹理更多。这种开销在绘制时可能花费宝贵的毫秒数：在一个非常简单的基准测试中，定义新创建的纹理的级别比使用相同的GL调用以重新定义如前所述的绘制中已经使用的纹理的尺寸要快3到6毫秒。为避免这种可能的损失，请创建新纹理，而不是更改现有纹理的格式或尺寸。相比之下，如果只需要更新纹理中包含的像素数据，最好重复使用纹理 - 只有在更新纹理格式或尺寸时才会产生额外的开销，因为这需要重新定义mip-map链。</p>
+</li>
+<li><p><strong>当裁剪和掩码启用时，不要执行清除操作</strong> </p>
+<p>Direct3D API和GL API之间的细微差别之一是，在前者中，清除调用会忽略裁剪和掩码，而后者在清除调用时会执行裁剪测试和掩码测试。这意味着如果在启用裁剪测试或使用颜色或模板掩码的情况下执行清除操作，ANGLE会绘制具有输入值的四边形，而不是使用清除操作。这引入了一些状态管理开销，因为ANGLE必须切换所有缓存状态，例如着色器，采样器和纹理绑定，以及与绘制调用流相关的顶点数据。然后必须为清除操作设定所有适当的状态，执行清除本身，然后在清除完成后将所有受影响的状态重置回其先前的设置。如果当前正在使用多个绘制缓冲区，使用WEBGL_draw_buffers，则此模拟清除的性能影响会变得复杂，因为必须对每个目标执行一次绘制。在没有裁剪或掩码的情况下清除缓冲区可以避免这种开销。</p>
+</li>
+<li><p><strong>以多边形模式渲染宽线</strong><br>￼<br><img src="/blog-imgs/webgl/triangle_fan.png" alt=""></p>
+<p>Figure 1.2</p>
+<p>ANGLE不支持大于1.0的线宽，通常称为“宽”线。虽然这有时是一个真实的需求，但宽线不是任何现代硬件的原语，因此需要在驱动程序或应用程序中进行仿真。关于如何呈现它们的确有很多不同意见;边角，端点和一些线关节变化的处理。过度绘制(同一像素重复绘制)/透明度在供应商，驱动程序和API之间差异很大。有关一些常见的关节渲染实现，请参见图1.2。基本上，没有正确的答案;游戏开发者主要想要速度，而CAD和地图应用程序可能更喜欢高质量的宽线，而它们会导致渲染速度变慢。许多应用程序都使用自己的实现来追求一致的结果，这使得基于驱动程序的实现不必要膨胀，而额外的状态跟踪会带来较小的性能成本。由于这些原因，宽线不被Direct3D支持，并且也在桌面OpenGL 3.0核心配置文件[Khronos 10]中被弃用。重要的是要意识到任何完全一致的WebGL实现可以具有1.0的最大行宽。因此，无法保证当我们在一个平台上获得所需结果时，它在另一个平台上看起来相同。 ANGLE不希望给人的印象是宽线被广泛地支持从而成为问题的一部分。在Cesium [Bagnell 13]中可以找到一种在应用中渲染宽线的方法。</p>
+</li>
+<li><p><strong>避免在顶点缓冲区中使用3-通道的Uint8Array/Uint16Array类型数据</strong></p>
+<p>Direct3D对三通道顶点格式的支持有限。 本地(native)仅支持32位三通道格式（整数和浮点数）的数据[MSDN 14a]。 当使用Direct3D后台时，ANGLE将其他三通道格式扩展为内部四通道格式。 如果顶点缓冲的使用是动态(dynamic draw)的，则缓冲区数据在每次绘制时都将执行此转换。 为避免数据被内部扩展，请使用四通道格式的8或16位类型数组。</p>
+</li>
+<li><p><strong>避免在索引缓冲区中使用Uint8Array类型数据</strong></p>
+<p>Direct3D 9和Direct3D 11都不支持8位索引，因此在这些平台上ANGLE将它们转换为16位索引来兼容。 为降低转换成本，请在索引缓冲区中使用16位的类型数组。</p>
+</li>
+<li><p><strong>避免在16位索引缓冲区中使用0xFFFF值</strong></p>
+<p>在Direct3D 11中，将所有bit设置为1的索引值视为特殊的标记，表示三角形-条带切割[MSDN 14b]。在OpenGL中，此功能称为图元重启。在3.0规范之前，图元重启不会出现在OpenGL ES中。在OpenGL ES 3.0中，图元重启可以打开和关闭，而相比之下，Direct3D 11中始终启用该功能。这导致ANGLE无意中破坏了一些使用高细节几何体的WebGL应用程序。*此bug在到达Chrome的稳定版本之前它没有被任何人注意到。它让ANGLE团队和WebGL开发人员都措手不及 - 另一个提示是始终使用Beta或Dev版本的浏览器测试应用程序。我们通过检测此条带切割索引并将整个索引缓冲区转换为使用32位值来修复错误。使用OES_element_index_uint扩展[Khronos 07a]可以避免这种成本，但是开发人员应该在它不可用的时候有备用方案。或者，内容创作工具可以通过创建小于65536个顶点的索引三角形条带缓冲区来避免在16位索引缓冲区中使用条带切割索引值。三角形列表不受图元重启的影响，因此这提供了另一种选择。</p>
+</li>
+<li><p><strong>正确使用静态缓冲区和标记</strong></p>
+<p>由于Direct3D 9本身支持的顶点格式有限，ANGLE必须先转换大部分数据，然后再将其上传到此平台上的GPU。 如果提供的顶点数据在它们首次用于渲染命令之后未被更新，则每次使用它们时都不需要转换数据。 因此，静态数据应尽可能存储在单独的指定缓冲区中。 此外，如果没有更新，ANGLE将跟踪缓冲区的更新并在内部将其升级为静态，开发人员可以通过将STATIC_DRAW指定为这些缓冲区的使用来避免不必要的数据转换。</p>
+</li>
+<li><p><strong>始终指定片段着色器浮点精度</strong></p>
+<p>GLSL ES 1.00和3.00未指定片段着色器中浮点值的默认精度。这使得编译错误：未明确指定它们的精度。早期版本的ANGLE没有遵守此规则，也没有产生错误。桌面硬件通常支持高精度，因此这从未给ANGLE本身带来问题。然而，这种宽容导致开发人员忘记设置精度，因为着色器在桌面系统上没有它也正常运行。这导致他们的代码在需要指定精度的各种其他平台上根本无法运行。精确度很重要，尤其是在移动平台上。因此，我们决定严格执行该规范。这一变化破坏了一些应用程序，但在向作者解释问题后，它们很快得到了解决。如果没有设置精度，那些主要在ANGLE驱动的浏览器上开发的那些应用将遇到编译错误。对于其他所有人，我们强烈建议您检查浏览器是否强制执行，如果没有，请经常使用其中的一个进行测试。有关着色器精度的更多信息，请参阅第8章。</p>
+</li>
+<li><p><strong>不要使用渲染反馈循环(Rendering Feedback Loops)</strong></p>
+<p>在OpenGL API中，尝试在渲染操作中对相同纹理或渲染缓冲区进行写入和采样被视为渲染反馈循环，并且在桌面OpenGL和OpenGL ES [Khronos 14a]中，此类操作的结果是未定义的。对于某些种类的图形硬件，Direct3D 9实际上可以为这些操作提供看似正确的结果。<br>在Direct3D 11中，此功能消失了 - 尝试执行此类渲染操作会生成带有黑色像素的图像，其中使用了采样值。用户没有意识到这是OpenGL ES和WebGL中未定义的行为，开始在ANGLE中将此报告为错误。我们决定在ANGLE中创建一致的行为，并通过在Direct3D 9中禁用此类渲染来明确表示不支持该操作。此外，WebGL规范已被修改为在渲染反馈循环到位时需要出错，而不是将行为保留为未定义[Khronos 14b]。</p>
+</li>
+</ul>
+<h3 id="OpenGL-ES-WebGL-2开发建议："><a href="#OpenGL-ES-WebGL-2开发建议：" class="headerlink" title="OpenGL ES, WebGL 2开发建议："></a>OpenGL ES, WebGL 2开发建议：</h3><p> There are a number of features already supported in ANGLE which are not yet exposed in WebGL. These features also have some caveats and some performance benefits for devel- opers. They’re accessible to users of ANGLE’s OpenGL ES interface, and many will become available with WebGL 2. We present our recommendations for these use cases next.</p>
+<ul>
+<li><p><strong>Don’t Use Extensions without Having a Fallback Path 在无反馈通道时不要使用扩展</strong></p>
+<p>It is understandably very tempting to rely on extensions when a quick test indicates that they are supported across a large swath of hardware. Unfortunately Murphy’s law, and the huge number of extensions and hardware variants, are not in our favor. Even YouTube has fallen victim to this.* A single-character ANGLE bug caused the OES_texture_npot extension [Khronos 07b], which enables support for textures whose dimensions are not powers of two, not to be advertised on certain hardware that did support it. Our conformance tests don’t test unavailable exten- sions, as an implementation without extensions is still completely conformant, so this regression went entirely unnoticed for some time until YouTube broke. Expecting NPOT textures to be present without having performed an extension check, the hardware accelerated video decode path in Chrome attempted to cre- ate a pbuffer surface whose dimensions were not a power of two and encountered a failure. This was quickly remedied (the ANGLE bug in question being a single missing exclamation point in a double negation) once it was known, but some trouble could have been avoided by querying the extension string and provid- ing a fallback path or an alert if the expected extension was not present. Issues with extensions continue to get more complicated over time with increasingly varying hardware features. We therefore recommend using them judiciously and frequently testing the fallback code path.</p>
+</li>
+<li><p><strong>Use Immutable Textures When Available 在系统支持时请使用不可变纹理</strong></p>
+<p>Historically, OpenGL and WebGL textures had to be created one mip level at a time. OpenGL does this via glTexImage<em>, a method that allows users to cre- ate internally inconsistent textures, considered by the GL to be “incomplete.” This same method is what is available to developers in WebGL, as texImage</em>. By contrast, Direct3D requires that users define the dimensions and format of their entire textures at texture creation time, and it enforces internal consistency.</p>
+<p>Because of this difference, ANGLE must do a considerable amount of bookkeep- ing and maintain system memory copies of all texture data. The ability to define an entire texture at creation time did later get introduced to OpenGL and its related APIs as immutable textures, which also enforce internal consistency and disallow changes to dimensions and format. Immutable textures came to OpenGL ES 2.0 with EXT_texture_storage [Khronos 13a], and they are included in the core OpenGL ES 3.0 specification and the WebGL 2 Editor’s Draft specifica- tion. When immutable textures are available via extension or core specification, some of ANGLE’s bookkeeping can be avoided by using the texStorage* com- mands to define textures.</p>
+</li>
+<li><p><strong>Use RED Textures instead of LUMINANCE  使用RED纹理而不是LUMINANCE</strong></p>
+<p>In WebGL and unextended OpenGL ES 2.0, the only option developers have for expressing single-channel textures is the LUMINANCE format, and LUMINANCE_ALPHA for two-channel textures. The EXT_texture_rg extension [Khronos 11] adds the RED and RG formats, and these formats become core functionality in OpenGL ES 3.0. The formats also appear in the WebGL 2 Editor’s Draft specification. Meanwhile, Direct3D 11 has dropped all support for luminance textures, providing only red and red-green formats [MSDN 14a]. This may seem to be a trivial difference—a channel is a channel—but sampling from a luminance texture is performed differently than from textures of other formats. The single channel of a luminance texture is duplicated into the red, green, and blue channels when a sample is performed, while sampling from a RED texture populates only the red channel with data. Similarly, the second channel of a LUMINANCE_ALPHA and an RG texture will populate only the alpha and green channels in a sample, respectively. To support luminance formats against Direct3D 11, rather than alter the swizzle behavior in shaders, ANGLE instead expands the texture data to four channels. This expansion, and the associ- ated additional memory and texture upload performance costs, can be avoided by developers keen for clock cycles by simply using RED textures in place of LUMINANCE and RG in place of LUMINANCE_ALPHA when using ANGLE with APIs that support them.</p>
+</li>
+<li><p><strong>Avoid Integer Cube Map Textures 避免整型立方体贴图纹理</strong></p>
+<p>Cube maps with unnormalized integer formats are not supported by Direct3D 11 [MSDN 14c]. The ANGLE team hasn’t encountered any uses for it, which may be the reason it was left out of D3D11, but it is a feature of OpenGL ES 3.0 and gets tested by the conformance tests. ANGLE therefore must emulate it in ANGLE’s ESSL to HLSL translator. The cube texture is replaced by a six- layer 2D array texture, and the face from which to sample, and at what loca- tion, is manually computed. Rather than unnormalized integer formats, we recommend using normalized integer formats for cube maps. If integer values are expected, multiply the sampled value by the maximum integer value, and round to the nearest integer. For example, for signed 16-bit integers: int i = int(round(32767 * f));</p>
+</li>
+<li><p><strong>Avoid Full-Texture Swizzle 避免全纹理Swizzle</strong></p>
+<p>Texture swizzling is an OpenGL ES 3.0 feature which allows a texture’s compo- nents to be sampled in a different order, using the TEXTURE_SWIZZLE_R,<br>TEXTURE_SWIZZLE_G, TEXTURE_SWIZZLE_B, and TEXTURE_ SWIZZLE_A texture parameters. This is most often used to read RGBA textures as BGRA, or vice versa, and can also be used to replicate components as with luminance textures. This feature is, however, not supported by Direct3D 11. Even though it appears a seemingly simple operation to perform during the shader translation, it is actually not feasible to determine which textures are sampled where, because samplers can be passed from function to function as parameters, and the same texture sampling function can be used to sample various different textures. ANGLE therefore swizzles the texture data itself. This consumes some memory and incurs some overhead at texture upload. These costs can be avoided by not changing the TEXTURE_SWIZZLE_R, TEXTURE_SWIZZLE_G, TEXTURE_SWIZZLE_B, and TEXTURE_SWIZZLE_A texture parameters from their defaults. If necessary, use multiple shader variants to account for dif- ferent texture component orders.</p>
+</li>
+<li><p><strong>Avoid Uniform Buffer Binding Offsets 避免统一缓冲区绑定偏移</strong></p>
+<p>Uniform buffer objects (UBOs), newly added in OpenGL ES 3.0, are bound objects which store uniform data for the use of GLSL shaders. UBOs offer benefits to developers, including the ability to share uniforms between programs and faster switching between sets of uniforms. OpenGL ES 3.0 also allows UBOs, much like other buffer objects, to be bound at an offset into the buffer, rather than just the buffer head. Direct3D, on the other hand, does not support referencing its analogous structure, constant buffers, until Direct3D 11.1, with the addition of the VSSetConstantBuffers1 method [MSDN 14d]. Offsets are supported with a software workaround on all hardware of lower feature levels. Developers can avoid any performance penalty associated with this workaround by binding UBOs at offset 0 only.</p>
+</li>
+<li><p><strong>Beware of Shadow Lookups in 2D Array Textures 谨防二维纹理数组中的阴影查找</strong></p>
+<p>Our final recommendation is a minor one, because the range of hardware affected is relatively small. Shadow comparison lookups are a feature introduced in OpenGL ES 3.0. These texture lookups can perform prefilter comparison of depth data contained in a texture against a provided reference value. ES 3.0 also intro- duces new texture types, including 2D texture arrays. Where these two features intersect, a caveat emerges. Direct3D 11 does support shadow lookups for 2D tex- ture arrays—but not at feature level 10_0 [MSDN 14e]. For this reason, ANGLE must either exclude feature level 10_0 hardware from ES 3.0 support or implement a workaround, with potential performance penalties. If the latter approach is cho- sen, developers may encounter performance issues on Direct3D 10.0 hardware. If the former approach is chosen instead, then OpenGL ES 3.0 would not be avail- able on this hardware at all.</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/22/cpu-and-gpu/" rel="next" title="CPU和GPU运算上的优缺点分析[转]">
+                <i class="fa fa-chevron-left"></i> CPU和GPU运算上的优缺点分析[转]
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">yaozhiguo</p>
+              <p class="site-description motion-element" itemprop="description">这里是一片广阔的天地</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WebGL1-0-开发建议"><span class="nav-number">2.</span> <span class="nav-text">WebGL1.0 开发建议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OpenGL-ES-WebGL-2开发建议："><span class="nav-number">3.</span> <span class="nav-text">OpenGL ES, WebGL 2开发建议：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yaozhiguo</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><a target="_blank" href="http://www.miitbeian.gov.cn/publish/query/indexFirst.action">鄂ICP备17008413号</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
