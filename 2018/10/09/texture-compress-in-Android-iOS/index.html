@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="移动设备内存有限，为了节省内存，一般都会对贴图进行压缩。一张4MB的贴图，在移动设备中压缩之后只有1/8，也就是0.5MB。 假如有一张1024px * 1024px的4通道(RGBA8888，每个通道都为8bit)贴图。一般来说，一张纹理所占用的内存的计算方式为长乘以框再撑每个像素的比特数，计算公式日下：  内存 = 长 ✖️ 宽 ✖️ 像素比特数 那么这张图所长的内存为：1024 ✖️ 102">
+<meta name="description" content="移动设备内存有限，为了节省内存，一般都会对贴图进行压缩。一张4MB的贴图，在移动设备中压缩之后只有1/8，也就是0.5MB。 假如有一张1024px * 1024px的4通道(RGBA8888，每个通道都为8bit)贴图。一般来说，一张纹理所占用的内存的计算方式为长乘以框再撑每个像素的比特数，计算公式日下：  内存 = 长 ✖️ 宽 ✖️ 像素比特数  那么这张图所长的内存为：1024 ✖️ 10">
 <meta name="keywords" content="texture compress">
 <meta property="og:type" content="article">
 <meta property="og:title" content="texture compress in Android&amp;iOS">
 <meta property="og:url" content="https://yaozhiguo2016.github.io/2018/10/09/texture-compress-in-Android-iOS/index.html">
 <meta property="og:site_name" content="一杯苦茶水的世界">
-<meta property="og:description" content="移动设备内存有限，为了节省内存，一般都会对贴图进行压缩。一张4MB的贴图，在移动设备中压缩之后只有1/8，也就是0.5MB。 假如有一张1024px * 1024px的4通道(RGBA8888，每个通道都为8bit)贴图。一般来说，一张纹理所占用的内存的计算方式为长乘以框再撑每个像素的比特数，计算公式日下：  内存 = 长 ✖️ 宽 ✖️ 像素比特数 那么这张图所长的内存为：1024 ✖️ 102">
+<meta property="og:description" content="移动设备内存有限，为了节省内存，一般都会对贴图进行压缩。一张4MB的贴图，在移动设备中压缩之后只有1/8，也就是0.5MB。 假如有一张1024px * 1024px的4通道(RGBA8888，每个通道都为8bit)贴图。一般来说，一张纹理所占用的内存的计算方式为长乘以框再撑每个像素的比特数，计算公式日下：  内存 = 长 ✖️ 宽 ✖️ 像素比特数  那么这张图所长的内存为：1024 ✖️ 10">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2018-10-09T05:35:53.923Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="texture compress in Android&amp;iOS">
-<meta name="twitter:description" content="移动设备内存有限，为了节省内存，一般都会对贴图进行压缩。一张4MB的贴图，在移动设备中压缩之后只有1/8，也就是0.5MB。 假如有一张1024px * 1024px的4通道(RGBA8888，每个通道都为8bit)贴图。一般来说，一张纹理所占用的内存的计算方式为长乘以框再撑每个像素的比特数，计算公式日下：  内存 = 长 ✖️ 宽 ✖️ 像素比特数 那么这张图所长的内存为：1024 ✖️ 102">
+<meta name="twitter:description" content="移动设备内存有限，为了节省内存，一般都会对贴图进行压缩。一张4MB的贴图，在移动设备中压缩之后只有1/8，也就是0.5MB。 假如有一张1024px * 1024px的4通道(RGBA8888，每个通道都为8bit)贴图。一般来说，一张纹理所占用的内存的计算方式为长乘以框再撑每个像素的比特数，计算公式日下：  内存 = 长 ✖️ 宽 ✖️ 像素比特数  那么这张图所长的内存为：1024 ✖️ 10">
 
 
 
@@ -161,7 +161,7 @@
       </a>
     </div>
       
-        <p class="site-subtitle">欢迎来的我的世界</p>
+        <p class="site-subtitle">欢迎来到我的世界</p>
       
   </div>
 
@@ -184,8 +184,6 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
             Home
           </a>
         </li>
@@ -193,8 +191,6 @@
         
         <li class="menu-item menu-item-categories">
           <a href="/categories/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
             
             Categories
           </a>
@@ -204,8 +200,6 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archives"></i> <br />
-            
             Archives
           </a>
         </li>
@@ -213,8 +207,6 @@
         
         <li class="menu-item menu-item-about">
           <a href="/about/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             About
           </a>
@@ -344,7 +336,8 @@
       
         <p>移动设备内存有限，为了节省内存，一般都会对贴图进行压缩。<br>一张4MB的贴图，在移动设备中压缩之后只有1/8，也就是0.5MB。</p>
 <p>假如有一张1024px * 1024px的4通道(RGBA8888，每个通道都为8bit)贴图。<br>一般来说，一张纹理所占用的内存的计算方式为长乘以框再撑每个像素的比特数，计算公式日下：</p>
-<p><code><br> 内存 = 长 ✖️ 宽 ✖️ 像素比特数<br></code></p>
+<p><code><br> 内存 = 长 ✖️ 宽 ✖️ 像素比特数
+</code></p>
 <p>那么这张图所长的内存为：1024 ✖️ 1024 ✖️ 4 ✖️ 8 bit = 1024 ✖️ 1024 ✖️ 4 Byte = 4MB, 即一个像素占 32bit == 4Byte。</p>
 <hr>
 
@@ -704,6 +697,28 @@
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
 
   
 

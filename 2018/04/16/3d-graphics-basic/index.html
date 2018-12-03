@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="向量 点乘 点乘等于向量大小和向量夹角的cos值的积：a·b = |a||b|cosθ 几何意义：点乘结果描述了两个向量的“相似”程度，点乘结果越大，两向量越接近  叉乘   矩阵方位的表达">
+<meta name="description" content="向量 求模 $ \Vert\vec{v}\Vert = \sqrt{\sum_{i=1}^n (\vec{v_{i}})^2} $对于3D而言: $ \Vert\vec{v}\Vert = \sqrt{\vec{v_{1}}^2 + \vec{v_{2}}^2 + \vec{v_{3}}^2} $  标准化 $ \vec{v}_{norm} = \frac{\vec{v}}{\Vert\vec{v">
 <meta property="og:type" content="article">
 <meta property="og:title" content="3D图形学基础总结">
 <meta property="og:url" content="https://yaozhiguo2016.github.io/2018/04/16/3d-graphics-basic/index.html">
 <meta property="og:site_name" content="一杯苦茶水的世界">
-<meta property="og:description" content="向量 点乘 点乘等于向量大小和向量夹角的cos值的积：a·b = |a||b|cosθ 几何意义：点乘结果描述了两个向量的“相似”程度，点乘结果越大，两向量越接近  叉乘   矩阵方位的表达">
+<meta property="og:description" content="向量 求模 $ \Vert\vec{v}\Vert = \sqrt{\sum_{i=1}^n (\vec{v_{i}})^2} $对于3D而言: $ \Vert\vec{v}\Vert = \sqrt{\vec{v_{1}}^2 + \vec{v_{2}}^2 + \vec{v_{3}}^2} $  标准化 $ \vec{v}_{norm} = \frac{\vec{v}}{\Vert\vec{v">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-04-16T09:04:50.092Z">
+<meta property="og:updated_time" content="2018-12-03T07:19:03.109Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="3D图形学基础总结">
-<meta name="twitter:description" content="向量 点乘 点乘等于向量大小和向量夹角的cos值的积：a·b = |a||b|cosθ 几何意义：点乘结果描述了两个向量的“相似”程度，点乘结果越大，两向量越接近  叉乘   矩阵方位的表达">
+<meta name="twitter:description" content="向量 求模 $ \Vert\vec{v}\Vert = \sqrt{\sum_{i=1}^n (\vec{v_{i}})^2} $对于3D而言: $ \Vert\vec{v}\Vert = \sqrt{\vec{v_{1}}^2 + \vec{v_{2}}^2 + \vec{v_{3}}^2} $  标准化 $ \vec{v}_{norm} = \frac{\vec{v}}{\Vert\vec{v">
 
 
 
@@ -160,7 +160,7 @@
       </a>
     </div>
       
-        <p class="site-subtitle">欢迎来的我的世界</p>
+        <p class="site-subtitle">欢迎来到我的世界</p>
       
   </div>
 
@@ -183,8 +183,6 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
             Home
           </a>
         </li>
@@ -192,8 +190,6 @@
         
         <li class="menu-item menu-item-categories">
           <a href="/categories/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
             
             Categories
           </a>
@@ -203,8 +199,6 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archives"></i> <br />
-            
             Archives
           </a>
         </li>
@@ -212,8 +206,6 @@
         
         <li class="menu-item menu-item-about">
           <a href="/about/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             About
           </a>
@@ -342,13 +334,157 @@
 
       
         <h3 id="向量"><a href="#向量" class="headerlink" title="向量"></a>向量</h3><ul>
+<li><p>求模</p>
+<p>$ \Vert\vec{v}\Vert = \sqrt{\sum_{i=1}^n (\vec{v_{i}})^2} $<br>对于3D而言: $ \Vert\vec{v}\Vert = \sqrt{\vec{v_{1}}^2 + \vec{v_{2}}^2 + \vec{v_{3}}^2} $</p>
+</li>
+<li><p>标准化</p>
+<p>$ \vec{v}_{norm} = \frac{\vec{v}}{\Vert\vec{v}\Vert}, \Vert{\vec{v}}\Vert ≠ 0 $<br>零向量不能被标准化，数学上这是不允许的，因为0会作为分母。 </p>
+</li>
 <li><p>点乘</p>
-<p>点乘等于向量大小和向量夹角的cos值的积：<br><br>a·b = |a||b|cosθ <br><br>几何意义：点乘结果描述了两个向量的“相似”程度，点乘结果越大，两向量越接近</p>
+<p>向量点乘就是对应分量乘积的和，结果是一个标量：<br>$ \vec{a} · \vec{b} = \sum_{i=1}^n a_{i}b_{i} $</p>
+<p><b>几何意义</b>：<br>点乘等于向量大小和向量夹角的cos值的积：<br>$ \vec{a} · \vec{b} = \Vert\vec{a}\Vert\vec{b}\Vert cosθ $<br>点乘结果描述了两个向量的“相似”程度，点乘结果越大，两向量越接近。</p>
 </li>
 <li><p>叉乘</p>
+<p>$ \begin{bmatrix} x_{1}\\y_{1}\\z_{1} \end{bmatrix} \times \begin{bmatrix} x_{2}\\y_{2}\\z_{2} \end{bmatrix} =<br> \begin{bmatrix} y_{1}z_{2} - z_{1}y_{2} \\z_{1}x_{2} - x_{1}z_{2}\\x_{1}y_{2} - y_{1}x_{2} \end{bmatrix}$</p>
+<p>向量叉乘不满足交换律也不满足结合律。但是满足反交换律：<br>$ \vec{a} \times \vec{b} = -(\vec{b} \times \vec{a}). $</p>
+<p><b>几何解释</b><br>叉乘得到的向量是垂直于原来两向量的，指向根据右手定则确定，即两个向量相乘的顺序。<br>$ \vec{a} \times \vec{b} $的长度等于向量的大小与向量夹角sin值的积：<br>$ \Vert\vec{a} \times \vec{b}\Vert = \Vert\vec{a}\Vert\Vert\vec{b}\Vert sinθ $ , 等于以a和b为两边的平行四边形的面积。</p>
 </li>
 </ul>
-<h3 id="矩阵"><a href="#矩阵" class="headerlink" title="矩阵"></a>矩阵</h3><h3 id="方位的表达"><a href="#方位的表达" class="headerlink" title="方位的表达"></a>方位的表达</h3>
+<h3 id="矩阵"><a href="#矩阵" class="headerlink" title="矩阵"></a>矩阵</h3><ul>
+<li><p>矩阵乘法</p>
+<p>$ 记r \times n矩阵A与n \times c矩阵B的积r \times c矩阵AB为C。C的任意元素c_{ij}的结果是A的第i行向量和B的第j列向量点乘的结果：$</p>
+<p>$ c_{ij} = \sum_{k=1}^n a_{ik}b_{kj}. $</p>
+</li>
+<li><p>矩阵运算规律</p>
+<ul>
+<li>矩阵乘法不满足交换律: $ AB ≠ BA $</li>
+<li>矩阵乘法满足结合律: $ ABC = (AB)C = A(BC) $</li>
+<li>矩阵乘法满足与标量的结合律: $ k(AB) = A(kB) = (kA)B $</li>
+<li>矩阵积的转置相当于每个矩阵逆的反向相乘: $ (AB)^T = B^TA^T, (AB…N)^T = N^T…B^TA^T $</li>
+<li>矩阵在操作向量时，采用列向量和行向量的表达方式不同，如：<br>用A，B，C三个矩阵分别按顺序转换向量$ \vec{v} $，采用列向量表示为$ CBA\vec{v} $(从右往左相乘)，采用行向量则是$ \vec{v}ABC $(从左往右相乘)</li>
+</ul>
+</li>
+<li><p>矩阵变换</p>
+<ul>
+<li><p><strong>旋转</strong><br>  绕x轴渲染θ弧度：<br>  $ R_{x}(θ) = \begin{bmatrix} p’\\q’\\r’ \end{bmatrix} = \begin{bmatrix}1&amp;0&amp;0\\0&amp;cosθ&amp;sinθ\\0&amp;-sinθ&amp;cosθ\end{bmatrix}<br>   $   </p>
+<p>  绕y轴渲染θ弧度：<br>  $ R_{y}(θ) = \begin{bmatrix} p’\\q’\\r’ \end{bmatrix} = \begin{bmatrix}cosθ&amp;0&amp;-sinθ\\0&amp;1&amp;0\\sinθ&amp;0&amp;cosθ\end{bmatrix}<br>   $   </p>
+<p>  绕z轴渲染θ弧度：<br>  $ R_{z}(θ) = \begin{bmatrix} p’\\q’\\r’ \end{bmatrix} = \begin{bmatrix}cosθ&amp;sinθ&amp;0\\ -sinθ&amp;cosθ&amp;0\\0&amp;0&amp;1\end{bmatrix}<br>   $ </p>
+<p>  绕任意轴$ \vec{n} $旋转θ：<br>  $ R_{n}(θ) = \begin{bmatrix} p’\\q’\\r’ \end{bmatrix} = \begin{bmatrix}n_{x}^2(1-cosθ) + cosθ&amp;n_{x}n_{y}(1-cosθ) + n_{z}sinθ&amp;n_{x}n_{z}(1-cosθ) - n_{y}sinθ<br>  \\n_{x}n_{y}(1-cosθ) - n_{z}sinθ&amp;n_{y}^2(1-cosθ) + cosθ&amp;n_{y}n_{z}(1-cosθ) + n_{x}sinθ<br>  \\n_{x}n_{z}(1-cosθ) + n_{y}sinθ&amp;n_{y}n_{z}(1-cosθ) - n_{x}sinθ&amp;n_{z}^2(1-cosθ) + cosθ<br>  \end{bmatrix} $  </p>
+</li>
+<li><p><strong>缩放</strong><br>沿坐标轴的缩放：<br>$ S(k_x, k_y, k_z) = \begin{bmatrix} k_x&amp;0&amp;0\\0&amp;k_y&amp;0\\0&amp;0&amp;k_z \end{bmatrix} $</p>
+<p>沿任意轴$ \vec{n} $的缩放（以单位向量n为方向，以k为缩放因子）:<br>$ S(\vec{n}, k) = \begin{bmatrix} p’\\q’\\r’ \end{bmatrix} =<br>\begin{bmatrix}<br>   1+(k-1)n_x^2&amp;(k-1)n_xn_y&amp;(k-1)n_xn_z \\<br>   (k-1)n_xn_y&amp;1+(k-1)n_y^2&amp;(k-1)n_yn_z \\<br>   (k-1)n_xn_z&amp;(k-1)n_zn_y&amp;1+(k-1)n_z^2<br> \end{bmatrix} $</p>
+</li>
+<li><p><strong>正交投影</strong></p>
+<ul>
+<li>通过设置沿任意方向缩放公式的系数k=0，可以导出垂直于$ \vec{n} $的平面的投影公式<br>$ P(\vec{n}) = S(\vec{n},0) =<br>\begin{bmatrix}<br>  1-n_x^2&amp;-n_xn_y&amp;-n_xn_z \\<br>  -n_xn_y&amp;1-n_y^2&amp;-n_yn_z \\<br>  -n_xn_z&amp;-n_zn_y&amp;1-n_z^2<br>\end{bmatrix} $</li>
+</ul>
+</li>
+<li><p><strong>镜像</strong>    </p>
+<ul>
+<li>通过设置沿任意方向缩放公式的系数k=-1，可以导出垂直于$ \vec{n} $且通过原点的平面的镜像公式<br>$ P(\vec{n}) = S(\vec{n}, -1) =<br>\begin{bmatrix}<br>  1-2n_x^2&amp;-2n_xn_y&amp;-2n_xn_z \\<br>  -2n_xn_y&amp;1-2n_y^2&amp;-2n_yn_z \\<br>  -2n_xn_z&amp;-2n_zn_y&amp;1-2n_z^2<br>\end{bmatrix} $</li>
+</ul>
+</li>
+<li><p><strong>错切</strong></p>
+</li>
+</ul>
+</li>
+<li><p>矩阵变换的分类</p>
+<ul>
+<li><p><strong>线性变换</strong></p>
+<p>定义：如果映射F保持了基本运算：加法和数量乘，那么就可以称该映射是线性的。在这种情况下，将两个向量相加然后再进行变换得到的结果和先分别进行变换再将变换后的向量相加得到的结果相同。同样，将一个向量数量乘再进行变换和先进行变换再数量乘的结果是一样的。</p>
+<p>$ F(a+b) = F(a) + F(b) $<br>$ F(ka) = kF(a) $</p>
+<p><strong><font color="red">对于上面的旋转、缩放、投影、镜像、错切变换，都是线性变换。</font></strong></p>
+</li>
+<li><p><strong>仿射变换</strong></p>
+<p>定义：线性变换后接着平移的变换。任何线性变换都是仿射变换，但仿射变换未必是线性变换。</p>
+<p>$ v’ = vM + b $, 当b = 0时，就是线性变换，b ≠ 0时，是非线性变化。</p>
+</li>
+<li><p><strong>可逆变换</strong></p>
+<p>定义：如果存在一个逆变换，可以”撤销”原变换，则该变换可逆。</p>
+<p>$ F^{-1}(F(a)) = a $, 如果存在$ F^{-1} $, 使得等式成立，则对于任意a，映射F(a)可逆。</p>
+<p><strong><font color="red">除了投影变换外，包括平移，都是可逆变换。<br>可逆矩阵的行列式不为0。</font></strong></p>
+</li>
+<li><p><strong>等角变换</strong></p>
+<p>定义：如果变换前后两个向量夹角的大小和方向都不改变，改变换是等角的。</p>
+<p><strong><font color="red">只有平移，旋转和等比缩放是等角变换。</font></strong></p>
+</li>
+<li><p><strong>正交变换</strong></p>
+<p><strong><font color="red">平移，旋转和镜像是仅有的正交变换。<br>正交矩阵的行列式为1或-1。</font></strong></p>
+</li>
+<li><p><strong>刚体变换</strong></p>
+<p>…  </p>
+</li>
+</ul>
+</li>
+<li><p>矩阵的行列式</p>
+<p>方阵M的行列式记作$ \vert M \vert $或$ det M $.</p>
+<p>一个3*3阶矩阵的行列式定义如下：</p>
+<p>$ \begin{vmatrix} m_{11}&amp;m_{12}&amp;m_{13} \\m_{21}&amp;m_{22}&amp;m_{23} \\m_{31}&amp;m_{32}&amp;m_{33} \end{vmatrix} = m_{11}m_{22}m_{33} + m_{12}m_{23}m_{31} + m_{13}m_{21}m_{32} - m_{13}m_{22}m_{31} - m_{12}m_{21}m_{33} - m_{11}m_{23}m_{32} $</p>
+<p><strong>余子式和代数余子式</strong></p>
+<p>对于一个$ r\times c $的矩阵，记$ M^{ij} $表示从M中除去第i行和第j列后剩下的矩阵，<strong>矩阵 $ M^{ij}$ 称作M的余子式</strong>。$ M^{ij} $有r-1行，c-1列。</p>
+<p>对于方阵M，给定行、列元素的<strong>代数余子式</strong>等于相应余子式的有符号行列式：<br>$ c_{ij} = (-1)^{i+j}\vert M^{ij} \vert $</p>
+<p><strong>计算n维方阵的行列式</strong></p>
+<p>利用方阵的余子式和代数余子式计算其行列式: 首先，从矩阵中任意选择一行或一列，对该行或列中的每个元素，都乘以对应的代数余子式。这些积的和就是矩阵的行列式。如，选择了一行i，则：<br>$ \vert M \vert = \sum_{j=1}^{n}m_{ij}c_{ij} = \sum_{j=1}^{n}m_{ij}(-1)^{i+j}\vert M^{ij} \vert $, 如:</p>
+<p>$ \begin{vmatrix} m_{11}&amp;m_{12}&amp;m_{13}&amp;m_{14}\\m_{21}&amp;m_{22}&amp;m_{23}&amp;m_{24}\\m_{31}&amp;m_{32}&amp;m_{33}&amp;m_{34}\\m_{41}&amp;m_{42}&amp;m_{43}&amp;m_{44}\end{vmatrix} =<br>   m_{11}\begin{vmatrix} m_{22}&amp;m_{23}&amp;m_{24}\\m_{32}&amp;m_{33}&amp;m_{34}\\m_{42}&amp;m_{43}&amp;m_{44} \end{vmatrix}<br>  -m_{12}\begin{vmatrix} m_{21}&amp;m_{23}&amp;m_{24}\\m_{31}&amp;m_{33}&amp;m_{34}\\m_{41}&amp;m_{43}&amp;m_{44} \end{vmatrix}<br>  +m_{13}\begin{vmatrix} m_{21}&amp;m_{22}&amp;m_{24}\\m_{31}&amp;m_{32}&amp;m_{34}\\m_{41}&amp;m_{42}&amp;m_{44} \end{vmatrix}<br>  -m_{14}\begin{vmatrix} m_{21}&amp;m_{22}&amp;m_{23}\\m_{31}&amp;m_{32}&amp;m_{33}\\m_{41}&amp;m_{42}&amp;m_{43} \end{vmatrix}<br>$</p>
+<p><strong>行列式的性质</strong></p>
+<ol>
+<li>矩阵积的行列式等于矩阵行列式的积：$ \vert{AB}\vert = \vert{A}\vert\vert{B}\vert $</li>
+<li>矩阵转置的行列式等于原矩阵的行列式：$ \vert{M^T}\vert = \vert{M}\vert $.</li>
+<li>如果矩阵的任意行或者列全为零，则它的行列式等于零。</li>
+<li>交换矩阵的任意两行或者两列，行列式变负。</li>
+<li>任意行或者列的非零积加到另一行或列上不会改变行列式的值。</li>
+<li>矩阵的行列式为零，则该矩阵包含投影；如果矩阵的行列式为负，则该矩阵包含镜像。</li>
+</ol>
+</li>
+<li><p>矩阵的逆</p>
+<p>$ M(M^{-1}) = M^{-1}M = I $，$ M^{-1} $是方阵$ M $的逆矩阵，二者相乘结果是单位矩阵。</p>
+<p>并非所有矩阵都有逆，如矩阵的某行或某列都是0元素，则任何矩阵乘以该矩阵结果都是零矩阵。<br>一个矩阵有逆矩阵，则称它为可逆或者非奇异矩阵；如果某矩阵没有逆矩阵，则称它为不可逆或者奇异矩阵。<br>奇异矩阵行列式为零，非奇异矩阵的行列式不为零。</p>
+<p><strong>标准伴随矩阵</strong></p>
+<p>矩阵$ M $中每个元素对应的代数余子式构成的矩阵$ M’ $称作代数余子式矩阵.<br>$ M $的标准伴随矩阵定义为M的代数余子式矩阵的转置矩阵，记作$ adjM $.</p>
+<p>$ adjM = M’^T $</p>
+<p><strong>矩阵求逆</strong></p>
+<p>$ M^{-1} = {adjM \over \vert{M}\vert} $, 即矩阵M的逆等于其标准伴随矩阵除以其行列式。</p>
+<p><strong>矩阵的逆的相关性质</strong></p>
+<ul>
+<li>若M是非奇异矩阵，则该矩阵的逆的逆等于原矩阵：$ (M^{-1})^{-1} = M $.</li>
+<li>$ I^{-1} = I $.</li>
+<li>$ (M^T)^{-1} = (M^{-1})^T $.</li>
+<li>$ (AB)^{-1} = B^{-1}A^{-1} $.</li>
+</ul>
+</li>
+<li><p>正交矩阵</p>
+<p>若方阵M是正交的，则当且仅当M与它的转置矩阵$ M^T $的乘积等于单位矩阵：<br>$ M正交 \Leftarrow\Rightarrow MM^T = I $.</p>
+<p>先前，我们知道$ MM^{-1} = I $, 所以可知当矩阵正交时有： $ M^{-1} = M^T $.</p>
+<p><strong><font color="red">这是一条极其重要的性质，可以用来计算矩阵的逆。<font></font></font></strong><br><strong><font color="red">计算矩阵时，仅在预先知道矩阵是正交时才能利用正交性的优点。如果预先不知道，那么检查正交性就是在浪费时间。即使在最好的情况下，先检查正交性以确定矩阵是否正交再进行转置，和一开始就进行求逆运算也将耗费同样多的时间。而如果矩阵不正交，那么这种检查完全是浪费时间。<font></font></font></strong></p>
+</li>
+<li><p>4*4齐次矩阵  </p>
+<p><strong>平移</strong></p>
+<p>$ 3\times 3 $矩阵表达的都是线性变化，不包含平移。可以通过齐次坐标来表达平移：</p>
+<p>$ T = \begin{bmatrix} 1&amp;0&amp;0&amp;0\\0&amp;1&amp;0&amp;0\\0&amp;0&amp;1&amp;0\\\Delta{x}&amp;\Delta{y}&amp;\Delta{y}&amp;1 \end{bmatrix} $</p>
+<p>对于一个3D的点(如位置)，在齐次坐标系中表示为(w = 1)</p>
+<p>$ P = \begin{bmatrix} x&amp;y&amp;z&amp;1 \end{bmatrix} $</p>
+<p>对于一个3D的方向(如法线)，在齐次坐标系中表示为(w = 0)</p>
+<p>$ D = \begin{bmatrix} x&amp;y&amp;z&amp;0 \end{bmatrix} $</p>
+<p>齐次坐标系中，对一个点通过矩阵来执行平移转换可以通过相乘来操作：</p>
+<p>$ PT = \begin{bmatrix} x&amp;y&amp;z&amp;1 \end{bmatrix}\begin{bmatrix} 1&amp;0&amp;0&amp;0\\0&amp;1&amp;0&amp;0\\0&amp;0&amp;1&amp;0\\\Delta{x}&amp;\Delta{y}&amp;\Delta{y}&amp;1 \end{bmatrix} = \begin{bmatrix} x + \Delta{x}&amp;y + \Delta{y}&amp;z+\Delta{z}&amp;1 \end{bmatrix} $</p>
+<p>如果对一个方向执行同样的平移操作，则：</p>
+<p>$ DT = \begin{bmatrix} x&amp;y&amp;z&amp;0 \end{bmatrix}\begin{bmatrix} 1&amp;0&amp;0&amp;0\\0&amp;1&amp;0&amp;0\\0&amp;0&amp;1&amp;0\\\Delta{x}&amp;\Delta{y}&amp;\Delta{y}&amp;1 \end{bmatrix} = \begin{bmatrix} x&amp;y&amp;z&amp;0 \end{bmatrix} $</p>
+<p><strong>可见，平移转换对一个只有方向特性的向量而言是无效的。但是旋转，缩放等操作，虽然不改变向量的无穷远点的特性，但是会改变向量本身的方向和大小的特性。</strong></p>
+</li>
+</ul>
+<h3 id="方位的表达"><a href="#方位的表达" class="headerlink" title="方位的表达"></a>方位的表达</h3><ul>
+<li><p>矩阵形式</p>
+</li>
+<li><p>欧拉角</p>
+</li>
+<li><p>四元数</p>
+</li>
+<li><p>不同形式之间的转换</p>
+</li>
+<li><p>不同形式的优缺点 </p>
+</li>
+</ul>
+
       
     </div>
     
@@ -712,6 +848,28 @@
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
 
   
 
