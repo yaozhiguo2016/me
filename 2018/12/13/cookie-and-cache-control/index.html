@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="web-develop," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="说明感谢原作者提供这么详尽的说明。(网上来源转载太多，搞不清谁是真正的作者，若原作者见到本文请联系本人，本人一定声明感谢！) Cookie是由服务器端生成，发送给User-Agent,浏览器会将Cookie的key/value保存到某个目录下的文本文件内，下次请求同一网站时就发送该Cookie给服务器。 Cookie的诞生由于HTTP协议是无状态的，而服务器端的业务必须是要有状态的。Cookie诞">
+<meta name="keywords" content="web-develop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cookie和cache-control[转]">
+<meta property="og:url" content="https://yaozhiguo2016.github.io/2018/12/13/cookie-and-cache-control/index.html">
+<meta property="og:site_name" content="一杯苦茶水的世界">
+<meta property="og:description" content="说明感谢原作者提供这么详尽的说明。(网上来源转载太多，搞不清谁是真正的作者，若原作者见到本文请联系本人，本人一定声明感谢！) Cookie是由服务器端生成，发送给User-Agent,浏览器会将Cookie的key/value保存到某个目录下的文本文件内，下次请求同一网站时就发送该Cookie给服务器。 Cookie的诞生由于HTTP协议是无状态的，而服务器端的业务必须是要有状态的。Cookie诞">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/cookie-response.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/cookie-send.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/cookie-browser.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/common-cache.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/public-cache.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/private-cache.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/cache-example.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/cache-with-200.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/cache-with-304.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/cache-control-summary.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/cache-max-age-0.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/cache-etag-1.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/cache-etag-2.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/cache-etag-3.png">
+<meta property="og:updated_time" content="2018-12-17T03:41:11.386Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="cookie和cache-control[转]">
+<meta name="twitter:description" content="说明感谢原作者提供这么详尽的说明。(网上来源转载太多，搞不清谁是真正的作者，若原作者见到本文请联系本人，本人一定声明感谢！) Cookie是由服务器端生成，发送给User-Agent,浏览器会将Cookie的key/value保存到某个目录下的文本文件内，下次请求同一网站时就发送该Cookie给服务器。 Cookie的诞生由于HTTP协议是无状态的，而服务器端的业务必须是要有状态的。Cookie诞">
+<meta name="twitter:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/cookie-response.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yaozhiguo2016.github.io/2018/12/13/cookie-and-cache-control/"/>
+
+
+
+
+
+  <title>cookie和cache-control[转] | 一杯苦茶水的世界</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">一杯苦茶水的世界</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">欢迎来到我的世界</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yaozhiguo2016.github.io/2018/12/13/cookie-and-cache-control/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yaozhiguo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一杯苦茶水的世界">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">cookie和cache-control[转]</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-13T20:09:10+08:00">
+                2018-12-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web-develop/" itemprop="url" rel="index">
+                    <span itemprop="name">web-develop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>感谢原作者提供这么详尽的说明。(网上来源转载太多，搞不清谁是真正的作者，若原作者见到本文请联系本人，本人一定声明感谢！)</p>
+<p>Cookie是由服务器端生成，发送给User-Agent,浏览器会将Cookie的key/value保存到某个目录下的文本文件内，下次请求<strong>同一网站</strong>时就发送该Cookie给服务器。</p>
+<h3 id="Cookie的诞生"><a href="#Cookie的诞生" class="headerlink" title="Cookie的诞生"></a>Cookie的诞生</h3><p>由于HTTP协议是无状态的，而服务器端的业务必须是要有状态的。Cookie诞生的最初目的是为了存储web中的状态信息，以方便服务器端使用。比如判断用户是否是第一次访问网站。目前最新的规范是RFC 6265，它是一个由浏览器服务器共同协作实现的规范。</p>
+<p>cookie的处理流程：</p>
+<ul>
+<li>服务器像客户端发送cookie</li>
+<li>浏览器将cookie保存</li>
+<li>之后每次http请求浏览器都会将cookie发送给服务器端</li>
+</ul>
+<h3 id="服务端的发送与解析"><a href="#服务端的发送与解析" class="headerlink" title="服务端的发送与解析"></a>服务端的发送与解析</h3><h4 id="服务端发送cookie"><a href="#服务端发送cookie" class="headerlink" title="服务端发送cookie"></a>服务端发送cookie</h4><p>服务器端向客户端发送Cookie是通过HTTP响应报文实现的，在Set-Cookie中设置需要向客户端发送的cookie，cookie格式如下：</p>
+<p>Set-Cookie: “name=value;domain=.domain.com;path=/;expires=Sat, 11 Jun 2016 11:29:42 GMT;HttpOnly;secure”<br>其中name=value是必选项，其它都是可选项。Cookie的主要构成如下：</p>
+<ul>
+<li>name:一个唯一确定的cookie名称。通常来讲cookie的名称是不区分大小写的。</li>
+<li>value:存储在cookie中的字符串值。最好为cookie的name和value进行url编码</li>
+<li>domain:cookie对于哪个域是有效的。所有向该域发送的请求中都会包含这个cookie信息。这个值可以包含子域(如：<br> yq.aliyun.com)，也可以不包含它(如：.aliyun.com，则对于aliyun.com的所有子域都有效).</li>
+<li>path: 表示这个cookie影响到的路径，浏览器跟会根据这项配置，像指定域中匹配的路径发送cookie。</li>
+<li>expires:失效时间，表示cookie何时应该被删除的时间戳(也就是，何时应该停止向服务器发送这个cookie)。如果不设置这个时间戳，浏览器会在页面关闭时即将删除所有cookie；不过也可以自己设置删除时间。这个值是GMT时间格式，如果客户端和服务器端时间不一致，使用expires就会存在偏差。</li>
+<li>max-age: 与expires作用相同，用来告诉浏览器此cookie多久过期（单位是秒），而不是一个固定的时间点。正常情况下，max-age的优先级高于expires。</li>
+<li>HttpOnly: 告知浏览器不允许通过脚本document.cookie去更改这个值，同样这个值在document.cookie中也不可见。但在http请求张仍然会携带这个cookie。注意这个值虽然在脚本中不可获取，但仍然在浏览器安装目录中以文件形式存在。这项设置通常在服务器端设置。</li>
+<li>secure: 安全标志，指定后，只有在使用SSL链接时候才能发送到服务器，如果是http链接则不会传递该信息。就算设置了secure 属性也并不代表他人不能看到你机器本地保存的 cookie 信息，所以不要把重要信息放cookie就对了.</li>
+</ul>
+<h4 id="服务器端对cookie的设置"><a href="#服务器端对cookie的设置" class="headerlink" title="服务器端对cookie的设置"></a>服务器端对cookie的设置</h4><p>cookie示例如下：</p>
+<pre><code>
+var http = require('http');
+var fs = require('fs');
+http.createServer(function(req, res) {
+  res.setHeader('status', '200 OK');
+  res.setHeader('Set-Cookie', 'isVisit=true;domain=.yourdomain.com;path=/;max-age=1000');
+  res.write('Hello World');
+  res.end();
+}).listen(8888);
+console.log('running localhost:8888');
+</code></pre>
+
+<p><img src="/blog-imgs/web-develop/cookie-response.png" alt="服务端设置cookie"></p>
+<p>下次请求时浏览器会想服务端传送cookie</p>
+<p><img src="/blog-imgs/web-develop/cookie-send.png" alt="浏览器发送cookie"></p>
+<p>直接设置Set-Cookie过于原始，我们可以对cookie的设置过程做如下封装：</p>
+<pre><code>
+var serilize = function(name, val, options) {
+  if (!name) {
+    throw new Error("coolie must have name");
+  }
+  var enc = encodeURIComponent;
+  var parts = [];
+
+  val = (val !== null && val !== undefined) ? val.toString() : "";
+  options = options || {};
+  parts.push(enc(name) + "=" + enc(val));
+  // domain中必须包含两个点号
+  if (options.domain) {
+    parts.push("domain=" + options.domain);
+  }
+  if (options.path) {
+    parts.push("path=" + options.path);
+  }
+  // 如果不设置expires和max-age浏览器会在页面关闭时清空cookie
+  if (options.expires) {
+    parts.push("expires=" + options.expires.toGMTString());
+  }
+  if (options.maxAge && typeof options.maxAge === "number") {
+    parts.push("max-age=" + options.maxAge);
+  }
+  if (options.httpOnly) {
+    parts.push("HTTPOnly");
+  }
+  if (options.secure) {
+    parts.push("secure");
+  }
+
+  return parts.join(";");
+}
+</code></pre>
+
+<p>需要注意的是，如果给cookie设置一个过去的时间，浏览器会立即删除该cookie；此外domain项必须有两个点，因此不能设置为localhost。</p>
+<h4 id="服务器端解析回传的cookie"><a href="#服务器端解析回传的cookie" class="headerlink" title="服务器端解析回传的cookie"></a>服务器端解析回传的cookie</h4><p>cookie可以设置不同的域与路径，所以对于同一个name value，在不同域不同路径下是可以重复的，浏览器会按照与当前请求url或页面地址最佳匹配的顺序来排定先后顺序，<br><img src="/blog-imgs/web-develop/cookie-browser.png" alt="浏览器的cookie"><br>所以当前端传递到服务器端的cookie有多个重复name value时，我们只需要最匹配的那个，也就是第一个。服务器端解析代码如下：</p>
+<pre><code>
+var parse = function(cstr) {
+  if (!cstr) {
+    return null;
+  }
+
+  var dec = decodeURIComponent;
+  var cookies = {};
+  var parts = cstr.split(/\s*;\s*/g);
+  parts.forEach(function(p){
+    var pos = p.indexOf('=');
+    // name 与value存入cookie之前，必须经过编码
+    var name = pos > -1 ? dec(p.substr(0, pos)) : p;
+    var val = pos > -1 ? dec(p.substr(pos + 1)) : null;
+    //只需要拿到最匹配的那个
+    if (!cookies.hasOwnProperty(name)) {
+      cookies[name] = val;
+    }/* else if (!cookies[name] instanceof Array) {
+      cookies[name] = [cookies[name]].push(val);
+    } else {
+      cookies[name].push(val);
+    }*/
+  });
+
+  return cookies;
+}
+</code></pre>
+
+<h3 id="客户端的存取"><a href="#客户端的存取" class="headerlink" title="客户端的存取"></a>客户端的存取</h3><p>浏览器将后台传递过来的cookie进行管理，并且允许开发者在JavaScript中使用document.cookie来存取cookie。但是这个接口使用起来非常蹩脚。它会因为使用它的方式不同而表现出不同的行为。当用来获取属性值时，document.cookie返回当前页面可用的（根据cookie的域、路径、失效时间和安全设置）所有的字符串，字符串的格式如下：</p>
+<pre><code>
+"name1=value1;name2=value2;name3=value3";
+</code></pre>
+当用来设置值的时候，document.cookie属性可设置为一个新的cookie字符串。这个字符串会被解释并添加到现有的cookie集合中。如：
+<pre><code>
+document.cookie = "_fa=aaaffffasdsf;domain=.dojotoolkit.org;path=/"
+</code></pre>
+
+<p>设置document.cookie并不会覆盖cookie，除非设置的name value domain path都与一个已存在cookie重复。<br>由于cookie的读写非常不方便，我们可以自己封装一些函数来处理cookie，主要是针对cookie的添加、修改、删除。</p>
+<pre><code>
+var cookieUtils = {
+    get: function(name){
+     var cookieName=encodeURIComponent(name) + "=";
+     //只取得最匹配的name，value
+     var cookieStart = document.cookie.indexOf(cookieName);
+     var cookieValue = null;
+
+     if (cookieStart > -1) {
+      // 从cookieStart算起
+      var cookieEnd = document.cookie.indexOf(';', cookieStart);
+      //从=后面开始
+      if (cookieEnd > -1) {
+       cookieValue = decodeURIComponent(document.cookie.substring(cookieStart + cookieName.length, cookieEnd));
+      } else {
+       cookieValue = decodeURIComponent(document.cookie.substring(cookieStart + cookieName.length, document.cookie.length));
+      }
+     }
+
+     return cookieValue;
+    },
+
+    set: function(name, val, options) {
+      if (!name) {
+        throw new Error("coolie must have name");
+      }
+      var enc = encodeURIComponent;
+      var parts = [];
+
+      val = (val !== null && val !== undefined) ? val.toString() : "";
+      options = options || {};
+      parts.push(enc(name) + "=" + enc(val));
+      // domain中必须包含两个点号
+      if (options.domain) {
+        parts.push("domain=" + options.domain);
+      }
+      if (options.path) {
+        parts.push("path=" + options.path);
+      }
+      // 如果不设置expires和max-age浏览器会在页面关闭时清空cookie
+      if (options.expires) {
+        parts.push("expires=" + options.expires.toGMTString());
+      }
+      if (options.maxAge && typeof options.maxAge === "number") {
+        parts.push("max-age=" + options.maxAge);
+      }
+      if (options.httpOnly) {
+        parts.push("HTTPOnly");
+      }
+      if (options.secure) {
+        parts.push("secure");
+      }
+
+      document.cookie = parts.join(";");
+    },
+    delete: function(name, options) {
+     options.expires = new Date(0);// 设置为过去日期
+     this.set(name, null, options);
+    }
+   }
+   </code></pre>
+
+<h3 id="缓存优点"><a href="#缓存优点" class="headerlink" title="缓存优点"></a>缓存优点</h3><p>通常所说的Web缓存指的是可以自动保存常见http请求副本的http设备。对于前端开发者来说，浏览器充当了重要角色。除此外常见的还有各种各样的代理服务器也可以做缓存。当Web请求到达缓存时，缓存从本地副本中提取这个副本内容而不需要经过服务器。这带来了以下优点：</p>
+<p>缓存减少了冗余的数据传输，节省流量<br>缓存缓解了带宽瓶颈问题。不需要更多的带宽就能更快加载页面<br>缓存缓解了瞬间拥塞，降低了对原始服务器的要求。<br>缓存降低了距离延时， 因为从较远的地方加载页面会更慢一些。</p>
+<h3 id="缓存种类"><a href="#缓存种类" class="headerlink" title="缓存种类"></a>缓存种类</h3><p>缓存可以是单个用户专用的，也可以是多个用户共享的。专用缓存被称为私有缓存，共享的缓存被称为公有缓存。</p>
+<h4 id="私有缓存"><a href="#私有缓存" class="headerlink" title="私有缓存"></a>私有缓存</h4><p>私有缓存只针对专有用户，所以不需要很大空间，廉价。Web浏览器中有内建的私有缓存——大多数浏览器都会将常用资源缓存在你的个人电脑的磁盘和内存中。如Chrome浏览器的缓存存放位置就在：C:\Users\Your_Account\AppData\Local\Google\Chrome\User Data\Default中的Cache文件夹和Media Cache文件夹。</p>
+<h4 id="公有缓存"><a href="#公有缓存" class="headerlink" title="公有缓存"></a>公有缓存</h4><p>公有缓存是特殊的共享代理服务器，被称为缓存代理服务器或代理缓存（反向代理的一种用途）。公有缓存会接受来自多个用户的访问，所以通过它能够更好的减少冗余流量。<br>下图中每个客户端都会重复的向服务器访问一个资源（此时还不在私有缓存中），这样它会多次访问服务器，增加服务器压力。而使用共享的公有缓存时，缓存只需要从服务器取一次，以后不用再经过服务器，能够显著减轻服务器压力。<br><img src="/blog-imgs/web-develop/common-cache.png" alt="共有缓存"></p>
+<p>事实上在实际应用中通常采用层次化的公有缓存，基本思想是在靠近客户端的地方使用小型廉价缓存，而更高层次中，则逐步采用更大、功能更强的缓存在装载多用户共享的资源。</p>
+<h3 id="缓存处理流程"><a href="#缓存处理流程" class="headerlink" title="缓存处理流程"></a>缓存处理流程</h3><p><img src="/blog-imgs/web-develop/public-cache.png" alt="公有缓存"></p>
+<p>而对于前端开发者来说，我们主要跟浏览器中的缓存打交道，所以上图流程简化为：</p>
+<p><img src="/blog-imgs/web-develop/private-cache.png" alt="私有缓存"></p>
+<p>下面这张图展示了某一网站，对不同资源的请求结果，其中可以看到有的资源直接从缓存中读取，有的资源跟服务器进行了再验证，有的资源重新从服务器端获取。</p>
+<p><img src="/blog-imgs/web-develop/cache-example.png" alt="缓存案例"></p>
+<p><strong>注意，我们讨论的所有关于缓存资源的问题，都仅仅针对GET请求。而对于POST, DELETE, PUT这类行为性操作通常不做任何缓存。</strong></p>
+<h3 id="新鲜度限值"><a href="#新鲜度限值" class="headerlink" title="新鲜度限值"></a>新鲜度限值</h3><p>HTTP通过缓存将服务器资源的副本保留一段时间，这段时间称为新鲜度限值。这在一段时间内请求相同资源不会再通过服务器。HTTP协议中Cache-Control和 Expires可以用来设置新鲜度的限值，前者是HTTP1.1中新增的响应头，后者是HTTP1.0中的响应头。二者所做的事时都是相同的，但由于Cache-Control使用的是相对时间，而Expires可能存在客户端与服务器端时间不一样的问题，所以我们更倾向于选择Cache-Control。</p>
+<h4 id="Cache-Control"><a href="#Cache-Control" class="headerlink" title="Cache-Control"></a>Cache-Control</h4><p>下面我们来看看Cache-Control都可以设置哪些属性值：</p>
+<p>max-age（单位为s）指定设置缓存最大的有效时间，定义的是时间长短。当浏览器向服务器发送请求后，在max-age这段时间里浏览器就不会再向服务器发送请求了。</p>
+<pre><code>
+    &#60;html&#62;
+     &#60;head>
+      &#60;meta http-equiv="Content-Type" content="text/html; charset=utf-8"&#62;
+      &#60;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /&#62;
+      &#60;meta http-equiv="X-UA-Compatible" content="IE=EDGE" /&#62;
+      &#60;title&#62;Web Cache&#60;/title&#62;
+      &#60;link rel="shortcut icon" href="./shortcut.png"&#62;
+     &#60;/head>
+     &#60;body class="claro"&#62;
+     &#60;img src="./cache.png"&#62;
+     &#60;/body&#62;
+    &#60;/html&#62;
+    var http = require('http');
+    var fs = require('fs');
+    http.createServer(function(req, res) {
+      if (req.url === '/' || req.url === '' || req.url === '/index.html') {
+        fs.readFile('./index.html', function(err, file) {
+          console.log(req.url)
+          //对主文档设置缓存，无效果
+          res.setHeader('Cache-Control', "no-cache, max-age=" + 5);
+          res.setHeader('Content-Type', 'text/html');
+          res.writeHead('200', "OK");
+          res.end(file);
+        });
+      }
+      if (req.url === '/cache.png') {
+        fs.readFile('./cache.png', function(err, file) {
+          res.setHeader('Cache-Control', "max-age=" + 5);//缓存五秒
+          res.setHeader('Content-Type', 'images/png');
+          res.writeHead('200', "Not Modified");
+          res.end(file);
+        });
+      }
+
+    }).listen(8888)
+</code></pre>
+
+<p>当在5秒内第二次访问页面时，浏览器会直接从缓存中取得资源</p>
+<p><img src="/blog-imgs/web-develop/cache-with-200.png" alt="直接从本地缓存读取资源"></p>
+<p>public 指定响应可以在代理缓存中被缓存，于是可以被多用户共享。如果没有明确指定private，则默认为public。<br>private 响应只能在私有缓存中被缓存，不能放在代理缓存上。对一些用户信息敏感的资源，通常需要设置为private。<br>no-cache 表示必须先与服务器确认资源是否被更改过（依靠If-None-Match和Etag），然后再决定是否使用本地缓存。<br>如果上文中关于cache.png的处理改成下面这样，则每次访问页面，浏览器都需要先去服务器端验证资源有没有被更改。</p>
+<p><img src="/blog-imgs/web-develop/cache-with-304.png" alt="直接从本地缓存读取资源"></p>
+<pre><code>
+fs.readFile('./cache.png', function(err, file) {
+    console.log(req.headers);
+    console.log(req.url)
+    if (!req.headers['if-none-match']) {
+      res.setHeader('Cache-Control', "no-cache, max-age=" + 5);
+      res.setHeader('Content-Type', 'images/png');
+      res.setHeader('Etag', "ffff");
+      res.writeHead('200', "Not Modified");
+      res.end(file);
+    } else {
+      if (req.headers['if-none-match'] === 'ffff') {
+        res.writeHead('304', "Not Modified");
+        res.end();
+      } else {
+        res.setHeader('Cache-Control', "max-age=" + 5);
+        res.setHeader('Content-Type', 'images/png');
+        res.setHeader('Etag', "ffff");
+        res.writeHead('200', "Not Modified");
+        res.end(file);
+      }
+    }
+  });
+</code></pre>
+
+<p>no-store 绝对禁止缓存任何资源，也就是说每次用户请求资源时，都会向服务器发送一个请求，每次都会下载完整的资源。通常用于机密性资源。</p>
+<p>关于Cache-Control的使用，见下面这张图（来自大额）<br><img src="/blog-imgs/web-develop/cache-control-summary.png" alt="cache-control-summary"></p>
+<h4 id="客户端的新鲜度限值"><a href="#客户端的新鲜度限值" class="headerlink" title="客户端的新鲜度限值"></a>客户端的新鲜度限值</h4><p>Cache-Control不仅仅可以在响应头中设置，还可以在请求头中设置。浏览器通过请求头中设置Cache-Control可以决定是否从缓存中读取资源。这也是为什么有时候点击浏览器刷新按钮和在地址栏回车，在NetWork模块中看到完全不同的结果<br><img src="/blog-imgs/web-develop/cache-max-age-0.png" alt="cache-max-age-0"></p>
+<p>Expires<br>不推荐使用Expires，它指定的是具体的过期日期而不是秒数。因为很多服务器跟客户端存在时钟不一致的情况，所以最好还是使用Cache-Control.</p>
+<h3 id="服务器再验证"><a href="#服务器再验证" class="headerlink" title="服务器再验证"></a>服务器再验证</h3><p>浏览器或代理缓存中缓存的资源过期了，并不意味着它和原始服务器上的资源有实际的差异，仅仅意味着到了要进行核对的时间了。这种情况被称为服务器再验证。</p>
+<p>如果资源发生变化，则需要取得新的资源，并在缓存中替换旧资源。<br>如果资源没有发生变化，缓存只需要获取新的响应头，和一个新的过期时间，对缓存中的资源过期时间进行更新即可。<br>HTTP1.1推荐使用的验证方式是If-None-Match/Etag，在HTTP1.0中则使用If-Modified-Since/Last-Modified。</p>
+<h4 id="Etag与If-None-Match"><a href="#Etag与If-None-Match" class="headerlink" title="Etag与If-None-Match"></a>Etag与If-None-Match</h4><p>根据实体内容生成一段hash字符串，标识资源的状态，由服务端产生。浏览器会将这串字符串传回服务器，验证资源是否已经修改，如果没有修改，过程如下(图片来自浅谈Web缓存)：</p>
+<p><img src="/blog-imgs/web-develop/cache-etag-1.png" alt="cache-etag-1"><br><img src="/blog-imgs/web-develop/cache-etag-2.png" alt="cache-etag-2"></p>
+<p>上文的demo中我们见到过服务器端如何验证Etag：</p>
+<p><img src="/blog-imgs/web-develop/cache-etag-3.png" alt="cache-etag-3"></p>
+<p>由于Etag有服务器构造，所以在集群环境中一定要保证Etag的唯一性</p>
+<h4 id="Last-Modified与If-Modified-Since"><a href="#Last-Modified与If-Modified-Since" class="headerlink" title="Last-Modified与If-Modified-Since"></a>Last-Modified与If-Modified-Since</h4><p>这两个是HTTP1.0中用来验证资源是否过期的请求/响应头，这两个头部都是日期，验证过程与Etag类似，这里不详细介绍。使用这两个头部来验证资源是否更新时，存在以下问题：</p>
+<p>有些文档资源周期性的被重写，但实际内容没有改变。此时文件元数据中会显示文件最近的修改日期与If-Modified-Since不相同，导致不必要的响应。</p>
+<p>有些文档资源被修改了，但修改内容并不重要，不需要所有的缓存都更新（比如代码注释）</p>
+<p>关于缓存的更新问题，请大家看看这里张云龙的回答，本文就不详细展开了。</p>
+<pre><code>
+<!DOCTYPE HTML>
+&#60;html&#62;
+ &#60;head&#62;
+  &#60;meta http-equiv="Content-Type" content="text/html; charset=utf-8"&#62;
+  &#60;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /&#62;
+  &#60;meta http-equiv="X-UA-Compatible" content="IE=EDGE" /&#62;
+  &#60;title&#62;Web Cache&#60;/title&#62;
+  &#60;link rel="shortcut icon" href="./shortcut.png"&#62;
+  &#60;script&#62;
+  &#60;/script&#62;
+ &#60;/head&#62;
+ &#60;body class="claro"&#62;
+ &#60;img src="./cache.png"&#62;
+ &#60;/body&#62;
+&#60;/html&#62;
+var http = require('http');
+var fs = require('fs');
+http.createServer(function(req, res) {
+  if (req.url === '/' || req.url === '' || req.url === '/index.html') {
+    fs.readFile('./index.html', function(err, file) {
+      console.log(req.url)
+      //对主文档设置缓存，无效果
+      res.setHeader('Cache-Control', "no-cache, max-age=" + 5);
+      res.setHeader('Content-Type', 'text/html');
+      res.writeHead('200', "OK");
+      res.end(file);
+    });
+  }
+  if (req.url === '/shortcut.png') {
+    fs.readFile('./shortcut.png', function(err, file) {
+      console.log(req.url)
+      res.setHeader('Content-Type', 'images/png');
+      res.writeHead('200', "OK");
+      res.end(file);
+    })
+  }
+  if (req.url === '/cache.png') {
+    fs.readFile('./cache.png', function(err, file) {
+      console.log(req.headers);
+      console.log(req.url)
+      if (!req.headers['if-none-match']) {
+        res.setHeader('Cache-Control', "max-age=" + 5);
+        res.setHeader('Content-Type', 'images/png');
+        res.setHeader('Etag', "ffff");
+        res.writeHead('200', "Not Modified");
+        res.end(file);
+      } else {
+        if (req.headers['if-none-match'] === 'ffff') {
+          res.writeHead('304', "Not Modified");
+          res.end();
+        } else {
+          res.setHeader('Cache-Control', "max-age=" + 5);
+          res.setHeader('Content-Type', 'images/png');
+          res.setHeader('Etag', "ffff");
+          res.writeHead('200', "Not Modified");
+          res.end(file);
+        }
+      }
+    });
+  }
+}).listen(8888)
+</code></pre>
+
+<p>好了，本文关于cookie的介绍到此结束了，希望大家能够喜欢。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/web-develop/" rel="tag"># web-develop</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/13/https-base/" rel="next" title="对https的理解">
+                <i class="fa fa-chevron-left"></i> 对https的理解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/17/Ajax/" rel="prev" title="Ajax与表单提交、文件上传下载和CORS">
+                Ajax与表单提交、文件上传下载和CORS <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">yaozhiguo</p>
+              <p class="site-description motion-element" itemprop="description">这里是一片广阔的天地</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#说明"><span class="nav-number">1.</span> <span class="nav-text">说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cookie的诞生"><span class="nav-number">2.</span> <span class="nav-text">Cookie的诞生</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务端的发送与解析"><span class="nav-number">3.</span> <span class="nav-text">服务端的发送与解析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#服务端发送cookie"><span class="nav-number">3.1.</span> <span class="nav-text">服务端发送cookie</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#服务器端对cookie的设置"><span class="nav-number">3.2.</span> <span class="nav-text">服务器端对cookie的设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#服务器端解析回传的cookie"><span class="nav-number">3.3.</span> <span class="nav-text">服务器端解析回传的cookie</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端的存取"><span class="nav-number">4.</span> <span class="nav-text">客户端的存取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存优点"><span class="nav-number">5.</span> <span class="nav-text">缓存优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存种类"><span class="nav-number">6.</span> <span class="nav-text">缓存种类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#私有缓存"><span class="nav-number">6.1.</span> <span class="nav-text">私有缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#公有缓存"><span class="nav-number">6.2.</span> <span class="nav-text">公有缓存</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存处理流程"><span class="nav-number">7.</span> <span class="nav-text">缓存处理流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新鲜度限值"><span class="nav-number">8.</span> <span class="nav-text">新鲜度限值</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Cache-Control"><span class="nav-number">8.1.</span> <span class="nav-text">Cache-Control</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#客户端的新鲜度限值"><span class="nav-number">8.2.</span> <span class="nav-text">客户端的新鲜度限值</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务器再验证"><span class="nav-number">9.</span> <span class="nav-text">服务器再验证</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Etag与If-None-Match"><span class="nav-number">9.1.</span> <span class="nav-text">Etag与If-None-Match</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Last-Modified与If-Modified-Since"><span class="nav-number">9.2.</span> <span class="nav-text">Last-Modified与If-Modified-Since</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yaozhiguo</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><a target="_blank" href="http://www.miitbeian.gov.cn/publish/query/indexFirst.action">鄂ICP备17008413号</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

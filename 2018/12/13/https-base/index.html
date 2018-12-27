@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="web-develop," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="非对称加密 非对称加密使用不同的密钥来进行加密和解密。对应的一组加解密密钥称为密钥对。消息发送者使用自己的私钥加密，接收者使用发送者的公钥进行解密。  摘要 摘要将信息转换成一个固定长度的字符串，并且过程不可逆。摘要的计算是根据三个条件计算出来的：  由单向散列函数H(d)和摘要KD(s,d) 组成的一对函数，其中s表示密码，d表示数据。  一个包含了安全信息的数据块，包括密码，称为A1。  一">
+<meta name="keywords" content="web-develop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="对https的理解">
+<meta property="og:url" content="https://yaozhiguo2016.github.io/2018/12/13/https-base/index.html">
+<meta property="og:site_name" content="一杯苦茶水的世界">
+<meta property="og:description" content="非对称加密 非对称加密使用不同的密钥来进行加密和解密。对应的一组加解密密钥称为密钥对。消息发送者使用自己的私钥加密，接收者使用发送者的公钥进行解密。  摘要 摘要将信息转换成一个固定长度的字符串，并且过程不可逆。摘要的计算是根据三个条件计算出来的：  由单向散列函数H(d)和摘要KD(s,d) 组成的一对函数，其中s表示密码，d表示数据。  一个包含了安全信息的数据块，包括密码，称为A1。  一">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/cipher.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/signature.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/signature_info.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/signature_check.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/https-dc.png">
+<meta property="og:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/https-transfer.png">
+<meta property="og:updated_time" content="2018-12-13T11:43:08.818Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="对https的理解">
+<meta name="twitter:description" content="非对称加密 非对称加密使用不同的密钥来进行加密和解密。对应的一组加解密密钥称为密钥对。消息发送者使用自己的私钥加密，接收者使用发送者的公钥进行解密。  摘要 摘要将信息转换成一个固定长度的字符串，并且过程不可逆。摘要的计算是根据三个条件计算出来的：  由单向散列函数H(d)和摘要KD(s,d) 组成的一对函数，其中s表示密码，d表示数据。  一个包含了安全信息的数据块，包括密码，称为A1。  一">
+<meta name="twitter:image" content="https://yaozhiguo2016.github.io/blog-imgs/web-develop/cipher.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yaozhiguo2016.github.io/2018/12/13/https-base/"/>
+
+
+
+
+
+  <title>对https的理解 | 一杯苦茶水的世界</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">一杯苦茶水的世界</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">欢迎来到我的世界</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yaozhiguo2016.github.io/2018/12/13/https-base/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yaozhiguo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一杯苦茶水的世界">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">对https的理解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-13T13:21:54+08:00">
+                2018-12-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web-develop/" itemprop="url" rel="index">
+                    <span itemprop="name">web-develop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li><p><strong>非对称加密</strong></p>
+<p>非对称加密使用不同的密钥来进行加密和解密。对应的一组加解密密钥称为密钥对。消息发送者使用自己的私钥加密，接收者使用发送者的公钥进行解密。<br><img src="/blog-imgs/web-develop/cipher.png" alt="非对称加密"></p>
+</li>
+<li><p><strong>摘要</strong></p>
+<p>摘要将信息转换成一个固定长度的字符串，并且过程不可逆。摘要的计算是根据三个条件计算出来的：</p>
+<ul>
+<li>由单向散列函数H(d)和摘要KD(s,d) 组成的一对函数，其中s表示密码，d表示数据。 </li>
+<li>一个包含了安全信息的数据块，包括密码，称为A1。 </li>
+<li><p>一个包含了请求报文中非保密属性的数据块，称为A2。</p>
+<p>H和KD处理两块数据A1和A2，产生摘要。H算法通常有MD5，SHA-1,SHA-2等。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>数字签名</strong></p>
+<p>对明文进行摘要运算之后，使用私钥对摘要进行加密，这个过程称为数字签名。私钥只有自己拥有，所以可以作为个人身份的标志。<br><img src="/blog-imgs/web-develop/signature.png" alt="数字签名示意图"></p>
+<p>一般的数字签名包含的信息：<br><img src="/blog-imgs/web-develop/signature_info.png" alt="数字签名内容"></p>
+<p>数字签名的验证：<br><img src="/blog-imgs/web-develop/signature_check.png" alt="数字签名验证"></p>
+</li>
+<li><p><strong>数字证书DC和认证中心CA</strong>  </p>
+<p>数字证书相当于一个站点的身份证，认证中心相当于颁发这个身份证的公安局，为数字证书的信息真实性提供担保。<br>https站点的数字证书包含的信息基本有：<br><img src="/blog-imgs/web-develop/https-dc.png" alt="数字签名"> ﻿</p>
+<p>https通信时，浏览器会先向站点请求数字证书，拿到数字证书后，浏览器会通过CA的公钥来验证数字签名，以确认信息的真实性和完备性。验证通过后，浏览器会使用站点公钥通过非对称加密算法生成一个临时的对称加密密码，并发送给服务器。服务器收到之后，确认密码，建立会话。然后通过这个临时的密码来对报文加密互相通信。<br><img src="/blog-imgs/web-develop/https-transfer.png" alt="数字签名"> </p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/web-develop/" rel="tag"># web-develop</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/23/webgl-little-tips/" rel="next" title="WebGL优化小提示">
+                <i class="fa fa-chevron-left"></i> WebGL优化小提示
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/13/cookie-and-cache-control/" rel="prev" title="cookie和cache-control[转]">
+                cookie和cache-control[转] <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">yaozhiguo</p>
+              <p class="site-description motion-element" itemprop="description">这里是一片广阔的天地</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yaozhiguo</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><a target="_blank" href="http://www.miitbeian.gov.cn/publish/query/indexFirst.action">鄂ICP备17008413号</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
