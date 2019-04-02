@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="webgl graphics," />
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="WebGL报告（webglreport）是获取当前浏览器的WebGL实现细节的好方法，尤其是在调试特定浏览器或设备的问题时。 为了提高性能，请避免在渲染循环中分配对象。尽可能重用对象和数组，并避免使用内置数组方法，如map和filter。每个新对象为垃圾收集器增加更多负担，在某些情况下，GC暂停可以每隔几秒发生一次，可以冻结一个应用程序许多个帧。 通过确保使用alpha，depth，stenci">
+<meta name="description" content="基本流程 创建缓冲区对象 gl.createBuffer() 绑定缓冲区对象 gl.bindBuffer() 将数据写入缓冲区对象 gl.bufferData() 将缓冲区对象分配给一个attribute变量 gl.vertexAttribPointer() 开启attribute变量 gl.enableVertexAttribArray() 绘制 gl.drawArray() 或 gl.draw">
+<meta name="keywords" content="webgl graphics">
 <meta property="og:type" content="article">
-<meta property="og:title" content="WebGL优化小提示">
-<meta property="og:url" content="https://yaozhiguo2016.github.io/2018/11/23/webgl-little-tips/index.html">
+<meta property="og:title" content="WebGL通过VAO和VBO渲染基本流程">
+<meta property="og:url" content="https://yaozhiguo2016.github.io/2019/03/27/webgl-create-base/index.html">
 <meta property="og:site_name" content="一杯苦茶水的世界">
-<meta property="og:description" content="WebGL报告（webglreport）是获取当前浏览器的WebGL实现细节的好方法，尤其是在调试特定浏览器或设备的问题时。 为了提高性能，请避免在渲染循环中分配对象。尽可能重用对象和数组，并避免使用内置数组方法，如map和filter。每个新对象为垃圾收集器增加更多负担，在某些情况下，GC暂停可以每隔几秒发生一次，可以冻结一个应用程序许多个帧。 通过确保使用alpha，depth，stenci">
+<meta property="og:description" content="基本流程 创建缓冲区对象 gl.createBuffer() 绑定缓冲区对象 gl.bindBuffer() 将数据写入缓冲区对象 gl.bufferData() 将缓冲区对象分配给一个attribute变量 gl.vertexAttribPointer() 开启attribute变量 gl.enableVertexAttribArray() 绘制 gl.drawArray() 或 gl.draw">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-11-23T04:59:27.091Z">
+<meta property="og:updated_time" content="2019-04-02T16:11:34.328Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="WebGL优化小提示">
-<meta name="twitter:description" content="WebGL报告（webglreport）是获取当前浏览器的WebGL实现细节的好方法，尤其是在调试特定浏览器或设备的问题时。 为了提高性能，请避免在渲染循环中分配对象。尽可能重用对象和数组，并避免使用内置数组方法，如map和filter。每个新对象为垃圾收集器增加更多负担，在某些情况下，GC暂停可以每隔几秒发生一次，可以冻结一个应用程序许多个帧。 通过确保使用alpha，depth，stenci">
+<meta name="twitter:title" content="WebGL通过VAO和VBO渲染基本流程">
+<meta name="twitter:description" content="基本流程 创建缓冲区对象 gl.createBuffer() 绑定缓冲区对象 gl.bindBuffer() 将数据写入缓冲区对象 gl.bufferData() 将缓冲区对象分配给一个attribute变量 gl.vertexAttribPointer() 开启attribute变量 gl.enableVertexAttribArray() 绘制 gl.drawArray() 或 gl.draw">
 
 
 
@@ -119,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://yaozhiguo2016.github.io/2018/11/23/webgl-little-tips/"/>
+  <link rel="canonical" href="https://yaozhiguo2016.github.io/2019/03/27/webgl-create-base/"/>
 
 
 
 
 
-  <title>WebGL优化小提示 | 一杯苦茶水的世界</title>
+  <title>WebGL通过VAO和VBO渲染基本流程 | 一杯苦茶水的世界</title>
   
 
 
@@ -244,7 +245,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://yaozhiguo2016.github.io/2018/11/23/webgl-little-tips/">
+    <link itemprop="mainEntityOfPage" href="https://yaozhiguo2016.github.io/2019/03/27/webgl-create-base/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="yaozhiguo">
@@ -261,7 +262,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">WebGL优化小提示</h1>
+          <h1 class="post-title" itemprop="name headline">WebGL通过VAO和VBO渲染基本流程</h1>
         
 
         <div class="post-meta">
@@ -273,8 +274,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-23T12:33:44+08:00">
-                2018-11-23
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-03-27T23:51:27+08:00">
+                2019-03-27
               </time>
             
 
@@ -333,18 +334,91 @@
       
 
       
-        <ol>
-<li>WebGL报告（<a href="http://webglreport.com" target="_blank" rel="noopener">webglreport</a>）是获取当前浏览器的WebGL实现细节的好方法，尤其是在调试特定浏览器或设备的问题时。</li>
-<li>为了提高性能，请避免在渲染循环中分配对象。尽可能重用对象和数组，并避免使用内置数组方法，如map和filter。每个新对象为垃圾收集器增加更多负担，在某些情况下，GC暂停可以每隔几秒发生一次，可以冻结一个应用程序许多个帧。</li>
-<li>通过确保使用alpha，depth，stencil，antialias和preserveDrawingBuffer选项设置为false来创建上下文，从而节省内存并提高性能，除非另有要求。请注意，默认情况下alpha，depth和antialias都是启用的，必须明确禁用。</li>
-<li>为了性能，请在渲染之前的初始化时来查询 attrubute 和 uniform变量的location。</li>
-<li>顶点和片段着色器之间的Int精度默认限定符不同。当在两个着色器之间计算时，这可能导致令人惊讶的视觉差异。</li>
-<li>为了便于移植，请将varying和uniform的空间要求保持在GLSL ES规范的限制范围内。考虑使用vec4变量而不是浮点数组，因为它们可能允许更紧密的压缩。请参阅GLSL ES规范中的A.7。</li>
-<li>非二次幂纹理需要linear或nearest滤波，以及clamp-to-border或者clamp-to-edge wrapping。不支持Mipmap滤波和repeat wrapping。</li>
-<li>当我们使用多个具有WEBGL_draw_buffers扩展的绘制缓冲区时，我们不想写入给定的绘制缓冲区时，将gl.NONE传递给绘制缓冲区参数列表。我们必须始终提供并关联帧缓冲区所具有的全部颜色区。</li>
-<li>始终通过“use strict”指令启用严格模式。它略微改变了JavaScript语义，因此许多无声错误变成了运行时异常，这甚至可以帮助浏览器更好地优化我们的代码。</li>
-<li>代码检查，例如JSHint（<a href="http://jshint.com" target="_blank" rel="noopener">JSHint</a>），是保持JavaScript代码清洁和无错误的宝贵工具。</li>
-</ol>
+        <h3 id="基本流程"><a href="#基本流程" class="headerlink" title="基本流程"></a>基本流程</h3><ul>
+<li>创建缓冲区对象 gl.createBuffer()</li>
+<li>绑定缓冲区对象 gl.bindBuffer()</li>
+<li>将数据写入缓冲区对象 gl.bufferData()</li>
+<li>将缓冲区对象分配给一个attribute变量 gl.vertexAttribPointer()</li>
+<li>开启attribute变量 gl.enableVertexAttribArray()</li>
+<li><p>绘制 gl.drawArray() 或 gl.drawElements()</p>
+<p><strong>下面分开详解这些API。</strong></p>
+</li>
+<li><p><strong>createBuffer():WebGLBuffer</strong></p>
+<p>本函数对应OpenGL中的glGenBuffers(), 用于创建一个指代缓冲区对象的名字，用WebGLBuffer对象作为代理。这个函数并不会真正在GPU显存上开辟空间，只是返回了一个类似于指针的对象。</p>
+</li>
+<li><p><strong>bindBuffer(target: uint, buffer: WebGLBuffer):void</strong></p>
+<ul>
+<li><strong>target</strong>: 绑定的目标(OpenGL内部会采取一种最优的内存管理策略，根据缓存对象完成绑定的情况来分配它对应的内存，这些可用的缓存结合点称为目标)，指定buffer是存储顶点属性数据还是数据的索引。gl.ARRAY_BUFFER, gl.ELEMENT_ARRAY_BUFFER</li>
+<li><strong>buffer</strong>: createBuffer创建的对象, 如果buffer为null，则禁用对target的绑定 </li>
+</ul>
+<p>本函数将createBuffer创建的buffer指代的缓冲区绑定为当前缓冲区(current buffer)。WebGL的绘制是单通道的，一次只能绘制一组数据，每次绘制的就是当前缓冲区buffer中的数据。后续所有将数据放入缓冲区的函数操作的都是这个当前缓冲区。<br>bindBuffer主要完成以下几点任务：1.如果buffer是第一次被绑定且它非空，则WebGL将创建一个与该buffer对应的缓冲区对象VBO，且置其为当前缓冲区对象；2.如果绑定一个已经创建的缓冲区对象，则将本对象置为当前缓冲区对象；3.如果buffer为null，则不再对当前target应用任何缓冲对象。</p>
+</li>
+<li><p><strong>bufferData(target: uint, data: TypedArray, usage: uint)</strong></p>
+<ul>
+<li>target 同上，需要和bindBuffer使用的target相同 </li>
+<li>data 类型化数组，存储顶点数据</li>
+<li><p>usage 设置分配数据之后的读取和写入方式，用于指导WebGL如何使用这些存储的数据。本参数帮助WebGL做优化，所以，即便你传入了错误的值，也不会终止程序，但可能导致性能下降。这个参数对能否达到最优性能至关重要。枚举值有：</p>
+<p><font color="red">gl.STATIC_DRAW</font> <code>数据存储内容只写入一次，然后多次绘制</code><br><strong>STATIC_开头，就是说数据的变动非常有限，或者根本就没有——因为它本质上是静态数据。这类标识符显然需要用于那些只修改过一次就不再变动的数据类型。OpenGl会在内部对数据重新处理，以保证它在内存中的布置更为合理，或者使用最优的数据格式。虽然这一步操作代价可能很大，但是只进行一次，整体还是理想的。</strong></p>
+<p><font color="red">gl.DYNAMIC_DRAW</font> <code>数据存储内容会被反复写入和反复使用</code><br><strong>DYNAMIC_开头，说明数据变动非常频繁，而变动过程中对数据的使用也非常频繁。例如一个建模程序，它所使用的数据可能被用户所编辑，此时有必要使用这个标识符。这时，一个可能的情况是数据在多帧内被持续使用，然后被修改，然后再次被多帧使用，如此反复。</strong></p>
+<p><font color="red">gl.STREAM_DRAW</font> <code>数据存储内容只写入一次，不会被频繁绘制</code><br><strong>与gl.DYNAMIC_DRAW相反，它的缓存修改是有规律的，并且每次修改数据后只会少量地加以使用。这种时候，OpenGL甚至可能不会讲数据拷贝到快速的图像内存中，而是直接在原地进行访问。这种情形通常发生在CPU端执行应用程序诸如物理仿真的操作时，此时每一帧都会给出一些新的数据集，供程序调取。</strong></p>
+</li>
+</ul>
+<p>本函数有两个任务：1.为顶点数据分配GPU存储空间(显存)；2.将数据从前端的RAM拷贝至分配的存储空间中，这需要执行一次IO行为。   </p>
+</li>
+<li><p><strong>vertexAttribPointer(location: int, size: unit, type: unit, normalized: boolean, stride: int, offset: int)</strong></p>
+<ul>
+<li>location <code>attribute变量在shader中的索引，通过gl.getAttribLocation()获得</code></li>
+<li>size <code>attribute变量占有缓冲区数组中每个顶点的元素个数(1-4)，如果size比attribute变量需要的数据小，则自动补全为0</code></li>
+<li>type <code>数据格式</code></li>
+<li>normalized <code>是否将非浮点数的数据归一化为[0, 1]或[-1, 1]区间</code></li>
+<li>stride <code>指定相邻两个顶点之间的字节数，以字节为单位</code></li>
+<li>offset <code>指定缓冲区对象中的偏移量，以字节为单位</code></li>
+</ul>
+<p>本函数用于告诉WebGL如何使用顶点数组中的数据：每个attribute变量如何从类型化数组中分配数据。它可以将缓冲区中的数据一次性的分配给某个attribute变量。</p>
+<pre><code>
+var verticesSizes = new Float32Array([
+     // 顶点坐标和点的尺寸
+     0.0, 0.5, 10.0, // 第一个点
+     -0.5, -0.5, 20.0, // 第二个点
+     0.5, -0.5, 30.0 // 第三个点
+]);
+
+var FSIZE = verticesSizes.BYTES_PER_ELEMENT;
+...
+gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, FSIZE * 3, 0);
+gl.enableVertexAttribArray(a_Position);
+...
+gl.vertexAttribPointer(a_Size, 1, gl.FLOAT, false, FSIZE * 3, 2);
+gl.enableVertexAttribArray(a_Size);
+
+</code></pre>
+</li>
+<li><p><strong>enableVertexAttribArray(location: int)</strong></p>
+<ul>
+<li>location <code>同上</code></li>
+</ul>
+<p>本函数告诉WebGL顶点缓存中记录了哪些顶点属性数据。在GPU从顶点缓存中读取数据之前，必须使用gl.enableVertexAttribArray()来开启attribute变量对应的顶点属性数组。如果不启用的话，WebGL会使用静态顶点属性。每个顶点的静态顶点属性都是一个默认值。每个顶点的静态顶点属性可以通过gl.vertexAttrib*()系列函数来设置。</p>
+</li>
+</ul>
+<ul>
+<li><p><strong>gl.drawArray or gl.drawElements</strong>  </p>
+<p>gl.drawArray(mode, first, count)</p>
+<ul>
+<li>mode 表示构建图元的类型，必须是gl.TRIANGLES,gl.LINE_LOOP,gl.LINES, gl.POINTS等其中之一</li>
+<li>first 数组中的起始位置，表示从本顶点开始绘制</li>
+<li>count 绘制的顶点数</li>
+</ul>
+<p>使用数组元素建立连续的的几何图元序列，每个启用的数组中起始位置为first，结束位置为first + count - 1.</p>
+<p>gl.drawElements(mode, count, type, offset)</p>
+<ul>
+<li>mode 同drawArray</li>
+<li>count </li>
+<li>type 索引数组中元素的类型，必须是gl.UNSIGNED_BYTE, gl.UNSIGNED_SHORT, gl.UNSIGNED_INT其中之一</li>
+<li>offset</li>
+</ul>
+<p>使用count个元素来定义一系列几何图元，而元素的索引值保存在一个绑定到gl.ELEMENT_ARRAY_BUFFER的缓存中(元素数组缓存)。offset定义了索引数组中的绘制起点，单位是字节。</p>
+</li>
+</ul>
 
       
     </div>
@@ -360,6 +434,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/webgl-graphics/" rel="tag"># webgl graphics</a>
+          
+        </div>
+      
 
       
       
@@ -369,8 +449,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/22/webgl-insight-practice-part1/" rel="next" title="《WebGL insights》实践提示(一)">
-                <i class="fa fa-chevron-left"></i> 《WebGL insights》实践提示(一)
+              <a href="/2018/12/17/Ajax/" rel="next" title="Ajax与表单提交、文件上传下载和CORS">
+                <i class="fa fa-chevron-left"></i> Ajax与表单提交、文件上传下载和CORS
               </a>
             
           </div>
@@ -378,10 +458,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/12/13/https-base/" rel="prev" title="对https的理解">
-                对https的理解 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -433,8 +509,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -494,6 +579,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本流程"><span class="nav-number">1.</span> <span class="nav-text">基本流程</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
